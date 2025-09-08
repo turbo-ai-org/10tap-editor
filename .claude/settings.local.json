@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:tiptap.dev)",
+      "WebFetch(domain:prosemirror.net)",
+      "WebSearch",
+      "Bash(yarn install)",
+      "Bash(yarn typecheck)",
+      "Bash(yarn editor:build:*)",
+      "Bash(yarn prepare)",
+      "Bash(yarn lint)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

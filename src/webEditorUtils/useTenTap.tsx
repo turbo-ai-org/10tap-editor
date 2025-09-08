@@ -83,6 +83,7 @@ export const useTenTap = (options?: useTenTapArgs) => {
 
   const editor = useEditor({
     content,
+    shouldRerenderOnTransaction: true,
     onCreate: () =>
       sendMessage({
         type: CoreEditorActionType.EditorReady,
