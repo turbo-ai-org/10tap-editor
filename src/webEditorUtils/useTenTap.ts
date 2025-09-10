@@ -1,86 +1,92 @@
-import { useEditor } from '@tiptap/react';
 import { useMemo } from 'react';
-import type { Editor, Extension } from '@tiptap/core';
+import { useEditor } from '@tiptap/react';
+import type {
+  EditorOptions,
+  JSONContent,
+  AnyExtension,
+  Extensions,
+} from '@tiptap/core';
 
-export interface UseTenTapArgs {
-  bridges?: any[]; // Bridge array (not used in web context)
-  tiptapOptions?: {
-    extensions: Extension[];
-    content?: string;
-    onUpdate?: ({ editor }: { editor: Editor }) => void;
-    [key: string]: any;
-  };
+import BridgeExtension from '../bridges/base';
+import { TenTapStartKit } from '../bridges/StarterKit';
+
+export type UseTenTapOptions = {
+  content?: string | JSONContent;
+  extensions?: Extensions;
+  bridges?: Array<BridgeExtension<any, any, any>>;
+  tiptapOptions?: Partial<EditorOptions>;
+
+  autofocus?: EditorOptions['autofocus'];
+  editable?: EditorOptions['editable'];
+  editorProps?: EditorOptions['editorProps'];
+  onUpdate?: EditorOptions['onUpdate'];
+  onCreate?: EditorOptions['onCreate'];
+  onDestroy?: EditorOptions['onDestroy'];
+  onSelectionUpdate?: EditorOptions['onSelectionUpdate'];
+  onTransaction?: EditorOptions['onTransaction'];
+  onFocus?: EditorOptions['onFocus'];
+  onBlur?: EditorOptions['onBlur'];
+};
+
+function resolveExtensionsFromBridges(
+  bridges: Array<BridgeExtension<any, any, any>>,
+): Extensions {
+  const out: AnyExtension[] = [];
+  for (const bridge of bridges) {
+    // BridgeExtension attaches runtime fields we can safely read
+    const b: any = bridge;
+    const config = b?.config;
+    const extendConfig = b?.extendConfig;
+
+    const res = bridge.configureTiptapExtensionsOnRunTime?.(config, extendConfig);
+    const arr = (Array.isArray(res) ? res : [res]).filter(
+      (e): e is AnyExtension => Boolean(e),
+    );
+    out.push(...arr);
+  }
+  return out;
 }
 
-/**
- * TipTap v3 compatible useTenTap hook for web usage
- * This provides the same interface as the mobile useTenTap but uses direct TipTap v3
- * with bridge communication to React Native WebView
- */
-export const useTenTap = (options: UseTenTapArgs = {}) => {
-  const { tiptapOptions = {} } = options;
-  
-  // Bridge extension configs from React Native (if available)
-  const extensionConfigs = useMemo(
-    () => {
-      try {
-        return JSON.parse((window as any).bridgeExtensionConfigMap || '{}');
-      } catch {
-        return {};
-      }
-    },
-    []
-  );
+export function useTenTap({
+  content,
+  extensions = [],
+  bridges = TenTapStartKit,
+  tiptapOptions,
+  autofocus,
+  editable,
+  editorProps,
+  onUpdate,
+  onCreate,
+  onDestroy,
+  onSelectionUpdate,
+  onTransaction,
+  onFocus,
+  onBlur,
+}: UseTenTapOptions) {
+  const runtimeExtensions = useMemo<Extensions>(() => {
+    const bridged = resolveExtensionsFromBridges(bridges);
+    return [...bridged, ...extensions];
+  }, [bridges, extensions]);
 
-  // Create TipTap v3 editor with bridge communication
   const editor = useEditor({
-    ...tiptapOptions,
-    onUpdate: ({ editor }) => {
-      // Call original onUpdate if provided
-      if (tiptapOptions.onUpdate) {
-        tiptapOptions.onUpdate({ editor });
-      }
-      
-      // Bridge communication with React Native
-      if ((window as any).ReactNativeWebView) {
-        try {
-          (window as any).ReactNativeWebView.postMessage(JSON.stringify({
-            type: 'content-change',
-            content: editor.getHTML()
-          }));
-        } catch (e) {
-          console.error('Failed to post message to React Native:', e);
-        }
-      }
-    },
-    onSelectionUpdate: ({ editor }) => {
-      // Bridge selection updates
-      if ((window as any).ReactNativeWebView) {
-        try {
-          const { from, to } = editor.state.selection;
-          (window as any).ReactNativeWebView.postMessage(JSON.stringify({
-            type: 'selection-change',
-            selection: { from, to }
-          }));
-        } catch (e) {
-          console.error('Failed to post selection message:', e);
-        }
-      }
-    },
-    onTransaction: ({ editor, transaction }) => {
-      // Bridge transaction updates for bridges if needed
-      if ((window as any).ReactNativeWebView && transaction.docChanged) {
-        try {
-          (window as any).ReactNativeWebView.postMessage(JSON.stringify({
-            type: 'transaction',
-            docChanged: transaction.docChanged
-          }));
-        } catch (e) {
-          console.error('Failed to post transaction message:', e);
-        }
-      }
-    }
+    extensions: runtimeExtensions,
+    content,
+    autofocus,
+    editable,
+    editorProps,
+    onUpdate,
+    onCreate,
+    onDestroy,
+    onSelectionUpdate,
+    onTransaction,
+    onFocus,
+    onBlur,
+    // TipTap v3: ensure React re-renders on every transaction.
+    shouldRerenderOnTransaction: true,
+    ...(tiptapOptions || {}),
   });
 
   return editor;
-};
+}
+
+export default useTenTap;

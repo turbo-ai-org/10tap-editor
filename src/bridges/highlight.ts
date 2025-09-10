@@ -48,6 +48,7 @@ export const HighlightBridge = new BridgeExtension<
 >({
   tiptapExtension: Highlight.configure({ multicolor: true }),
   tiptapExtensionDeps: [TextStyle],
+
   onBridgeMessage: (editor, { type, payload }) => {
     switch (type) {
       case HighlightEditorActionType.SetHighlight:
@@ -62,28 +63,17 @@ export const HighlightBridge = new BridgeExtension<
     }
     return false;
   },
-  extendEditorInstance: (sendBridgeMessage) => {
-    return {
-      setHighlight: (color) =>
-        sendBridgeMessage({
-          type: HighlightEditorActionType.SetHighlight,
-          payload: color,
-        }),
-      toggleHighlight: (color) =>
-        sendBridgeMessage({
-          type: HighlightEditorActionType.ToggleHighlight,
-          payload: color,
-        }),
-      unsetHighlight: () =>
-        sendBridgeMessage({
-          type: HighlightEditorActionType.UnsetHighlight,
-          payload: undefined,
-        }),
-    };
-  },
-  extendEditorState: (editor) => {
-    return {
-      activeHighlight: editor.getAttributes('highlight').color,
-    };
-  },
+
+  extendEditorInstance: (sendBridgeMessage) => ({
+    setHighlight: (color) =>
+      sendBridgeMessage({ type: HighlightEditorActionType.SetHighlight, payload: color }),
+    toggleHighlight: (color) =>
+      sendBridgeMessage({ type: HighlightEditorActionType.ToggleHighlight, payload: color }),
+    unsetHighlight: () =>
+      sendBridgeMessage({ type: HighlightEditorActionType.UnsetHighlight, payload: undefined }),
+  }),
+
+  extendEditorState: (editor) => ({
+    activeHighlight: editor.getAttributes('highlight').color,
+  }),
 });

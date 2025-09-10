@@ -2,6 +2,7 @@ import { Plugin, PluginKey } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
 import { Extension } from '@tiptap/core';
 
+// Adds a simple inline decoration over the active selection.
 export const blueBackgroundPlugin = Extension.create({
   name: 'eventHandler',
 
@@ -13,29 +14,24 @@ export const blueBackgroundPlugin = Extension.create({
           init() {
             return DecorationSet.empty;
           },
-          apply(tr, _oldState, _oldEditorState, newEditorState) {
+          apply(tr, _oldPluginState, _oldEditorState, newEditorState) {
             if (tr.selection.empty) {
-              // If there is no selection, return the old state
+              // No selection -> no decorations
               return DecorationSet.empty;
-            } else {
-              // If there is a selection, create a decoration
-              const decorations = [];
-              const { from, to } = tr.selection;
-              decorations.push(
-                Decoration.inline(from, to, {
-                  class: 'highlight-background',
-                })
-              );
-              return DecorationSet.create(
-                newEditorState.doc as any,
-                decorations
-              );
             }
+
+            const { from, to } = tr.selection;
+            const decorations = [
+              Decoration.inline(from, to, {
+                class: 'highlight-background',
+              }),
+            ];
+            return DecorationSet.create(newEditorState.doc as any, decorations);
           },
         },
         props: {
           decorations(state) {
-            return this.getState(state) as any;
+            return (this as any).getState(state);
           },
         },
       }),

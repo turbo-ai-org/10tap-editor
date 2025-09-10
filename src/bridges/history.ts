@@ -21,10 +21,9 @@ export enum HistoryEditorActionType {
   Redo = 'redo',
 }
 
-type HistoryMessage = {
-  type: HistoryEditorActionType.Undo | HistoryEditorActionType.Redo;
-  payload?: undefined;
-};
+type HistoryMessage =
+  | { type: HistoryEditorActionType.Undo; payload?: undefined }
+  | { type: HistoryEditorActionType.Redo; payload?: undefined };
 
 export const HistoryBridge = new BridgeExtension<
   HistoryEditorState,
@@ -32,30 +31,26 @@ export const HistoryBridge = new BridgeExtension<
   HistoryMessage
 >({
   tiptapExtension: UndoRedo,
-  onBridgeMessage: (editor, message) => {
-    if (message.type === HistoryEditorActionType.Undo) {
-      editor.chain().focus().undo().run();
-    }
-    if (message.type === HistoryEditorActionType.Redo) {
-      editor.chain().focus().redo().run();
-    }
 
+  onBridgeMessage: (editor, message) => {
+    switch (message.type) {
+      case HistoryEditorActionType.Undo:
+        editor.chain().focus().undo().run();
+        break;
+      case HistoryEditorActionType.Redo:
+        editor.chain().focus().redo().run();
+        break;
+    }
     return false;
   },
-  extendEditorInstance: (sendBridgeMessage) => {
-    const undo = () =>
-      sendBridgeMessage({ type: HistoryEditorActionType.Undo });
-    const redo = () =>
-      sendBridgeMessage({ type: HistoryEditorActionType.Redo });
-    return {
-      redo,
-      undo,
-    };
-  },
-  extendEditorState: (editor) => {
-    return {
-      canUndo: editor.can().undo(),
-      canRedo: editor.can().redo(),
-    };
-  },
+
+  extendEditorInstance: (sendBridgeMessage) => ({
+    undo: () => sendBridgeMessage({ type: HistoryEditorActionType.Undo }),
+    redo: () => sendBridgeMessage({ type: HistoryEditorActionType.Redo }),
+  }),
+
+  extendEditorState: (editor) => ({
+    canUndo: editor.can().undo(),
+    canRedo: editor.can().redo(),
+  }),
 });

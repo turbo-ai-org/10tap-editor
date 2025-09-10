@@ -18,29 +18,29 @@ __metadata:
     "@tiptap/extension-bold": ^3.4.1
     "@tiptap/extension-bullet-list": ^3.4.1
     "@tiptap/extension-code": ^3.4.1
-    "@tiptap/extension-code-block": ^3.4.1
     "@tiptap/extension-color": ^3.4.1
     "@tiptap/extension-document": ^3.4.1
     "@tiptap/extension-dropcursor": ^3.4.1
     "@tiptap/extension-hard-break": ^3.4.1
     "@tiptap/extension-heading": ^3.4.1
     "@tiptap/extension-highlight": ^3.4.1
-    "@tiptap/extension-horizontal-rule": ^3.4.1
     "@tiptap/extension-image": ^3.4.1
     "@tiptap/extension-italic": ^3.4.1
     "@tiptap/extension-link": ^3.4.1
+    "@tiptap/extension-list": ^3.4.1
     "@tiptap/extension-list-item": ^3.4.1
     "@tiptap/extension-ordered-list": ^3.4.1
+    "@tiptap/extension-paragraph": ^3.4.1
     "@tiptap/extension-placeholder": ^3.4.1
     "@tiptap/extension-strike": ^3.4.1
     "@tiptap/extension-task-item": ^3.4.1
     "@tiptap/extension-task-list": ^3.4.1
+    "@tiptap/extension-text": ^3.4.1
     "@tiptap/extension-text-style": ^3.4.1
     "@tiptap/extension-underline": ^3.4.1
     "@tiptap/extensions": ^3.4.1
     "@tiptap/pm": ^3.4.1
     "@tiptap/react": ^3.4.1
-    "@tiptap/starter-kit": ^3.4.1
     "@types/jest": ^28.1.2
     "@types/lodash": ^4.14.202
     "@types/react": ~17.0.21
@@ -53,11 +53,9 @@ __metadata:
     eslint-config-prettier: ^8.5.0
     eslint-plugin-prettier: ^4.0.0
     jest: ^28.1.1
-    lodash: ^4.17.21
     pod-install: ^0.1.0
     prettier: ^2.0.5
     react: 18.2.0
-    react-dom: ^18.2.0
     react-native: 0.73.2
     react-native-builder-bob: ^0.20.0
     react-native-webview: ^13.7.1
@@ -7204,16 +7202,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-code-block@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/extension-code-block@npm:3.4.1"
-  peerDependencies:
-    "@tiptap/core": ^3.4.1
-    "@tiptap/pm": ^3.4.1
-  checksum: e120f66aa4c01923ba717d0e7ddbb962c208bc839fbd9d0942639cc2800aece8b94468652eff831368880c5fbe32ecc072d8fee407d174bf12180acfce931a9e
-  languageName: node
-  linkType: hard
-
 "@tiptap/extension-code@npm:^3.4.1":
   version: 3.4.1
   resolution: "@tiptap/extension-code@npm:3.4.1"
@@ -7242,11 +7230,11 @@ __metadata:
   linkType: hard
 
 "@tiptap/extension-document@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/extension-document@npm:3.4.1"
+  version: 3.4.2
+  resolution: "@tiptap/extension-document@npm:3.4.2"
   peerDependencies:
-    "@tiptap/core": ^3.4.1
-  checksum: 07647d9c1e65f0ef70a70cfb5b31738955255b87be47ff2c1e02a6c99442ca8f28cd50abf473576509a405ee44491f3510f8c82c715233be322a55835fc68ca8
+    "@tiptap/core": ^3.4.2
+  checksum: 1f4952a2574bdedc706c358e3c0464f36d04e37aeabde5b0b80fd3afd985974a57f9b239a248b746b33d0e1c7bfe9c84e97450da08b82fe9aee0b40ba533e874
   languageName: node
   linkType: hard
 
@@ -7282,15 +7270,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-gapcursor@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/extension-gapcursor@npm:3.4.1"
-  peerDependencies:
-    "@tiptap/extensions": ^3.4.1
-  checksum: 9401c56f4ffbc85e872cf2276d12f879348f43c5851cc24d1f70c39b4c7f5c1ba92d82434c8e40cb25ee58febdf03aa83477e03cb7557369d1487352b593c5d5
-  languageName: node
-  linkType: hard
-
 "@tiptap/extension-hard-break@npm:^3.4.1":
   version: 3.4.1
   resolution: "@tiptap/extension-hard-break@npm:3.4.1"
@@ -7315,16 +7294,6 @@ __metadata:
   peerDependencies:
     "@tiptap/core": ^3.4.1
   checksum: 22e16a7ba644d65f72062842f24d8246a35a2f181572eca40eb27a929bc93518708a97c43edb4dc46b6332179e089ca8f1e3600e3504609589b82c90c530c0ab
-  languageName: node
-  linkType: hard
-
-"@tiptap/extension-horizontal-rule@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/extension-horizontal-rule@npm:3.4.1"
-  peerDependencies:
-    "@tiptap/core": ^3.4.1
-    "@tiptap/pm": ^3.4.1
-  checksum: b38becdf0d5407f650c9d8a2a7d81635363c481e099c3847ab164834f8418de0644e3f3ad75a956cdecdcdc913ee10dbdebbedd7717758281b349fed8c2ad11d
   languageName: node
   linkType: hard
 
@@ -7367,15 +7336,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-list-keymap@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/extension-list-keymap@npm:3.4.1"
-  peerDependencies:
-    "@tiptap/extension-list": ^3.4.1
-  checksum: a672fb3782141fe5b12d8aa218fea07ba6706d0bfab2ac756b0574994dd45e1892d7add28e078d1e21df680b787f42144d2e2d530727e71d61cb4047979a4d80
-  languageName: node
-  linkType: hard
-
 "@tiptap/extension-list@npm:^3.4.1":
   version: 3.4.1
   resolution: "@tiptap/extension-list@npm:3.4.1"
@@ -7405,11 +7365,11 @@ __metadata:
   linkType: hard
 
 "@tiptap/extension-paragraph@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/extension-paragraph@npm:3.4.1"
+  version: 3.4.2
+  resolution: "@tiptap/extension-paragraph@npm:3.4.2"
   peerDependencies:
-    "@tiptap/core": ^3.4.1
-  checksum: cc5d3d9dc6bc0093cf34e1e79245930c4275bee7d214793994c36728a4dd3196b12793e3c8e965eb0241a7ecebb20e69a85a1c121d6f45831e517083f5439b5d
+    "@tiptap/core": ^3.4.2
+  checksum: 8947296e43203f58dc4d7f8ceec2b9a1e206e31f7825946f939de210fc8b9c555207636f55718e89ad9c46f9be1affe503310741bf9b78545ec502f10c85069a
   languageName: node
   linkType: hard
 
@@ -7432,11 +7392,11 @@ __metadata:
   linkType: hard
 
 "@tiptap/extension-task-item@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/extension-task-item@npm:3.4.1"
+  version: 3.4.2
+  resolution: "@tiptap/extension-task-item@npm:3.4.2"
   peerDependencies:
-    "@tiptap/extension-list": ^3.4.1
-  checksum: 92a6ac4edd568e1c1571bd78c431ce03d0e069cbd2418e9690e3899079eb354dc57a4439cab9fb704b536427413b5c61e212ff248437adcb1df2ada2374df1a6
+    "@tiptap/extension-list": ^3.4.2
+  checksum: d7c246a485cc1659e4ca3f791674ed4f1f626362ad9ef55a02a94f453f5f2df115d7ce8b4390f076adf7ccdc2d00e23ca1da5209eb5e56f13cb63265d65190fa
   languageName: node
   linkType: hard
 
@@ -7468,11 +7428,11 @@ __metadata:
   linkType: hard
 
 "@tiptap/extension-text@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/extension-text@npm:3.4.1"
+  version: 3.4.2
+  resolution: "@tiptap/extension-text@npm:3.4.2"
   peerDependencies:
-    "@tiptap/core": ^3.4.1
-  checksum: 67bb859408cda2e00909cab5665ccec67f0d7d7750c3822a9242d53f608bd60af7fc9ada8704b4015e14843e99c09ff773bb8cea7a6febb2433db197e72dec66
+    "@tiptap/core": ^3.4.2
+  checksum: d92ca52073589f55c9f7820b212f9238395426c5c82ae8649e16fcf4e7133584dcc826bacac21344a4798c93cac5740b8e83f59c0db21542c0a230ffecb61258
   languageName: node
   linkType: hard
 
@@ -7584,38 +7544,6 @@ __metadata:
     "@tiptap/extension-floating-menu":
       optional: true
   checksum: bd85df3c66249923e1dc583e6459ab45bf0b0ce1bb4d8aa1b72f95093c5bc1c60d97e903255c60f63aa2970dfcb3ca1eb5878f2b34463bed6fca39daf3c7997c
-  languageName: node
-  linkType: hard
-
-"@tiptap/starter-kit@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@tiptap/starter-kit@npm:3.4.1"
-  dependencies:
-    "@tiptap/core": ^3.4.1
-    "@tiptap/extension-blockquote": ^3.4.1
-    "@tiptap/extension-bold": ^3.4.1
-    "@tiptap/extension-bullet-list": ^3.4.1
-    "@tiptap/extension-code": ^3.4.1
-    "@tiptap/extension-code-block": ^3.4.1
-    "@tiptap/extension-document": ^3.4.1
-    "@tiptap/extension-dropcursor": ^3.4.1
-    "@tiptap/extension-gapcursor": ^3.4.1
-    "@tiptap/extension-hard-break": ^3.4.1
-    "@tiptap/extension-heading": ^3.4.1
-    "@tiptap/extension-horizontal-rule": ^3.4.1
-    "@tiptap/extension-italic": ^3.4.1
-    "@tiptap/extension-link": ^3.4.1
-    "@tiptap/extension-list": ^3.4.1
-    "@tiptap/extension-list-item": ^3.4.1
-    "@tiptap/extension-list-keymap": ^3.4.1
-    "@tiptap/extension-ordered-list": ^3.4.1
-    "@tiptap/extension-paragraph": ^3.4.1
-    "@tiptap/extension-strike": ^3.4.1
-    "@tiptap/extension-text": ^3.4.1
-    "@tiptap/extension-underline": ^3.4.1
-    "@tiptap/extensions": ^3.4.1
-    "@tiptap/pm": ^3.4.1
-  checksum: 634519138dbab70fb14858404d2dae709dc13f3805c827b281fb4a154f4e1de01ace7c412e8d9f115159842176e03d3a33ae58c7563c845130a1ee68f8b66782
   languageName: node
   linkType: hard
 
@@ -21306,7 +21234,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^18.0.0, react-dom@npm:^18.2.0":
+"react-dom@npm:^18.0.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
   dependencies:
