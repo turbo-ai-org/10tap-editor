@@ -1,18 +1,28 @@
-import { Platform, View, NativeModules } from 'react-native';
-import type { HostComponent } from 'react-native';
-import TenTapNative, { type NativeProps } from './TenTapViewNativeComponent';
+import { Platform, View } from 'react-native';
+import type { ComponentType } from 'react';
+import type { NativeProps } from './TenTapViewNativeComponent';
+import TenTapViewNativeComponent from './TenTapViewNativeComponent';
 
-// iOS: set the RCTBridge on the native module once (if available)
-if (Platform.OS === 'ios' && NativeModules?.TenTapView?.setBridge) {
+let TenTapView: ComponentType<NativeProps>;
+
+// Keep your “only export when the native exists” logic here, not in the spec file
+if (Platform.OS === 'ios' || Platform.OS === 'android') {
   try {
-    NativeModules.TenTapView.setBridge();
+    const { NativeModules } = require('react-native');
+    if (NativeModules?.TenTapView) {
+      if (Platform.OS === 'ios') {
+        // original side-effect you had
+        NativeModules.TenTapView.setBridge?.();
+      }
+      TenTapView = TenTapViewNativeComponent as unknown as ComponentType<NativeProps>;
+    } else {
+      TenTapView = View as unknown as ComponentType<NativeProps>;
+    }
   } catch {
-    // noop
+    TenTapView = View as unknown as ComponentType<NativeProps>;
   }
+} else {
+  TenTapView = View as unknown as ComponentType<NativeProps>;
 }
-
-// If the native module is missing for any reason, fall back to a plain View to avoid crashes.
-const TenTapView =
-  (NativeModules?.TenTapView ? TenTapNative : (View as any)) as HostComponent<NativeProps>;
 
 export default TenTapView;
