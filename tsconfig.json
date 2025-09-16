@@ -2,14 +2,18 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "@10play/tentap-editor": ["./src/index"]
+      "@10play/tentap-editor": [
+        "./src/index"
+      ]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": ["esnext"],
+    "lib": [
+      "esnext"
+    ],
     "module": "esnext",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
@@ -23,7 +27,14 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": true
   },
-  "exclude": ["./src/simpleWebEditor","./website", "example/src/Examples/Advanced/editor-web", "./src/webEditorUtils", "./src/webEditorUtils/vite.config.ts"]
+  "exclude": [
+    "./src/simpleWebEditor",
+    "./website",
+    "example/src/Examples/Advanced/editor-web",
+    "./src/webEditorUtils",
+    "./src/webEditorUtils/vite.config.ts"
+  ],
+  "extends": "expo/tsconfig.base"
 }

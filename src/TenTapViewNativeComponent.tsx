@@ -1,17 +1,23 @@
 import type { ViewProps } from 'react-native';
-import type { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
-import codegenNativeComponent, {
-  type NativeComponentType,
-} from 'react-native/Libraries/Utilities/codegenNativeComponent';
+import { requireNativeComponent } from 'react-native';
 
 export interface NativeProps extends ViewProps {
-  keyboardHeight: Int32;
+  keyboardHeight: number;
   keyboardID?: string;
-  inputTag?: Int32;
-  rootBackground?: Int32;
+  inputTag?: number;
+  rootBackground?: number;
 }
 
-// IMPORTANT: this must be unconditional so RN Codegen sees it.
-export default codegenNativeComponent<NativeProps>(
-  'TenTapView'
-) as NativeComponentType<NativeProps>;
+const ComponentName = 'TenTapView';
+
+let TenTapViewNativeComponent: React.ComponentType<NativeProps>;
+
+try {
+  const codegenNativeComponent = require('react-native/Libraries/Utilities/codegenNativeComponent')
+    .default;
+  TenTapViewNativeComponent = codegenNativeComponent(ComponentName) as React.ComponentType<NativeProps>;
+} catch {
+  TenTapViewNativeComponent = requireNativeComponent<NativeProps>(ComponentName);
+}
+
+export default TenTapViewNativeComponent;
