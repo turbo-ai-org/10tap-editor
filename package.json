@@ -45,17 +45,14 @@
     "editor:dev": "vite",
     "editor:build": "vite build && node ./scripts/buildEditor.js ./src/simpleWebEditor/build/index.html",
     "editor:build-web-utils": "rimraf lib-web && vite build --config ./src/webEditorUtils/vite.config.ts && tsc --project ./src/webEditorUtils",
-    "build:all": "bob build && yarn editor:build-web-utils",
     "example": "yarn workspace tentap-example",
     "example76": "yarn workspace example76",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "node ./scripts/conditionalPrepare.js",
-    "release": "release-it",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "prepare": "bob build && yarn editor:build-web-utils",
+    "release": "release-it"
   },
   "keywords": [
     "rich text",
@@ -106,9 +103,7 @@
     "@tiptap/extensions": "^3.4.1",
     "@tiptap/pm": "^3.4.1",
     "@tiptap/react": "^3.4.1",
-    "expo": "~53.0.22",
-    "react": "19.0.0",
-    "react-native": "0.79.6"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",

@@ -7,6 +7,8 @@
     "./src/webEditorUtils",
     "example",
     "example76",
-    "./src/webEditorUtils/vite.config.ts"
+    "./src/webEditorUtils/vite.config.ts",
+    "lib",
+    "lib-web"
   ]
 }
