@@ -8,7 +8,8 @@
       "Bash(yarn typecheck)",
       "Bash(yarn editor:build:*)",
       "Bash(yarn prepare)",
-      "Bash(yarn lint)"
+      "Bash(yarn lint)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []
