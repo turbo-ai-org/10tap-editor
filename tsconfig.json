@@ -35,6 +35,5 @@
     "example/src/Examples/Advanced/editor-web",
     "./src/webEditorUtils",
     "./src/webEditorUtils/vite.config.ts"
-  ],
-  "extends": "expo/tsconfig.base"
+  ]
 }
