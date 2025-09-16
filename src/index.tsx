@@ -1,5 +1,5 @@
-export { default as TenTapView } from './TenTapViewNativeComponent';
-export * from './TenTapViewNativeComponent';
+export { default as TenTapView } from './TenTapView';
+export type { NativeProps } from './TenTapViewNativeComponent';
 export * from './RichText';
 export { default as BridgeExtension } from './bridges/base';
 export * from './bridges/StarterKit';
