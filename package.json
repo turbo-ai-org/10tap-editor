@@ -1,6 +1,6 @@
 {
   "name": "@10play/tentap-editor",
-  "version": "0.7.4",
+  "version": "0.7.3",
   "description": "React Native Rich Text Editor",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -15,7 +15,7 @@
     },
     "./web": {
       "import": "./lib-web/index.mjs",
-      "require": "./lib-web/index.cjs",
+      "require": "./lib-web/index.umd.cjs",
       "types": "./lib-web/typescript/webEditorUtils/index.d.ts"
     },
     "./package.json": "./package.json"
@@ -66,7 +66,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/<YOUR-GH-ORG>/<YOUR-FORK-REPO>.git"
+    "url": "git+https://github.com/10play/10Tap-Editor.git"
   },
   "author": "Amir Angel <36531255+17Amir17@users.noreply.github.com> (https://www.10play.dev)",
   "license": "MIT",
@@ -74,36 +74,9 @@
     "url": "https://github.com/10play/10Tap-Editor/issues"
   },
   "homepage": "https://github.com/10play/10Tap-Editor#readme",
-  "dependencies": {
-    "@tiptap/core": "^3.4.1",
-    "@tiptap/extension-blockquote": "^3.4.1",
-    "@tiptap/extension-bold": "^3.4.1",
-    "@tiptap/extension-bullet-list": "^3.4.1",
-    "@tiptap/extension-code": "^3.4.1",
-    "@tiptap/extension-color": "^3.4.1",
-    "@tiptap/extension-document": "^3.4.1",
-    "@tiptap/extension-dropcursor": "^3.4.1",
-    "@tiptap/extension-hard-break": "^3.4.1",
-    "@tiptap/extension-heading": "^3.4.1",
-    "@tiptap/extension-highlight": "^3.4.1",
-    "@tiptap/extension-image": "^3.4.1",
-    "@tiptap/extension-italic": "^3.4.1",
-    "@tiptap/extension-link": "^3.4.1",
-    "@tiptap/extension-list": "^3.4.1",
-    "@tiptap/extension-list-item": "^3.4.1",
-    "@tiptap/extension-ordered-list": "^3.4.1",
-    "@tiptap/extension-paragraph": "^3.4.1",
-    "@tiptap/extension-placeholder": "^3.4.1",
-    "@tiptap/extension-strike": "^3.4.1",
-    "@tiptap/extension-task-item": "^3.4.1",
-    "@tiptap/extension-task-list": "^3.4.1",
-    "@tiptap/extension-text": "^3.4.1",
-    "@tiptap/extension-text-style": "^3.4.1",
-    "@tiptap/extension-underline": "^3.4.1",
-    "@tiptap/extensions": "^3.4.1",
-    "@tiptap/pm": "^3.4.1",
-    "@tiptap/react": "^3.4.1",
-    "lodash": "^4.17.21"
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -171,10 +144,15 @@
       "tagName": "v${version}"
     },
     "npm": {
-      "publish": false
+      "publish": true
     },
     "github": {
-      "release": false
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "conventionalcommits"
+      }
     }
   },
   "eslintConfig": {
@@ -221,14 +199,37 @@
       ]
     ]
   },
-  "codegenConfig": {
-    "name": "RNTenTapViewSpec",
-    "type": "components",
-    "jsSrcsDir": "src",
-    "ios": {
-      "componentProvider": {
-        "TenTapView": "TenTapView"
-      }
-    }
+  "dependencies": {
+    "@tiptap/core": "^3.0.0",
+    "@tiptap/extension-blockquote": "^3.0.0",
+    "@tiptap/extension-bold": "^3.0.0",
+    "@tiptap/extension-bullet-list": "^3.0.0",
+    "@tiptap/extension-code": "^3.0.0",
+    "@tiptap/extension-code-block": "^3.0.0",
+    "@tiptap/extension-color": "^3.0.0",
+    "@tiptap/extension-document": "^3.0.0",
+    "@tiptap/extension-dropcursor": "^3.0.0",
+    "@tiptap/extension-hard-break": "^3.0.0",
+    "@tiptap/extension-heading": "^3.0.0",
+    "@tiptap/extension-highlight": "^3.0.0",
+    "@tiptap/extension-history": "^3.0.0",
+    "@tiptap/extension-horizontal-rule": "^3.0.0",
+    "@tiptap/extension-image": "^3.0.0",
+    "@tiptap/extension-italic": "^3.0.0",
+    "@tiptap/extension-link": "^3.0.0",
+    "@tiptap/extension-list-item": "^3.0.0",
+    "@tiptap/extension-ordered-list": "^3.0.0",
+    "@tiptap/extension-placeholder": "^3.0.0",
+    "@tiptap/extension-strike": "^3.0.0",
+    "@tiptap/extension-task-item": "^3.0.0",
+    "@tiptap/extension-task-list": "^3.0.0",
+    "@tiptap/extension-text": "^3.0.0",
+    "@tiptap/extension-text-style": "^3.0.0",
+    "@tiptap/extension-underline": "^3.0.0",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/react": "^3.0.0",
+    "@tiptap/starter-kit": "^3.0.0",
+    "lodash": "^4.17.21",
+    "react-dom": "^18.2.0"
   }
 }

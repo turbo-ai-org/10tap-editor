@@ -1,15 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:tiptap.dev)",
-      "WebFetch(domain:prosemirror.net)",
-      "WebSearch",
       "Bash(yarn install)",
-      "Bash(yarn typecheck)",
-      "Bash(yarn editor:build:*)",
       "Bash(yarn prepare)",
-      "Bash(yarn lint)",
-      "WebFetch(domain:github.com)"
+      "Bash(yarn editor:build:*)",
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Read(//Users/griffinhuth/Documents/Work/10tap-editor/.github/**)"
     ],
     "deny": [],
     "ask": []
