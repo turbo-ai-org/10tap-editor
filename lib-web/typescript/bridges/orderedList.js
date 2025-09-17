@@ -1,0 +1,30 @@
+import ListItem from '@tiptap/extension-list-item';
+import OrderedList from '@tiptap/extension-ordered-list';
+import BridgeExtension from './base';
+export var OrderedListEditorActionType;
+(function (OrderedListEditorActionType) {
+    OrderedListEditorActionType["ToggleOrderedList"] = "toggle-orderedList";
+})(OrderedListEditorActionType || (OrderedListEditorActionType = {}));
+export const OrderedListBridge = new BridgeExtension({
+    tiptapExtension: OrderedList,
+    tiptapExtensionDeps: [ListItem],
+    onBridgeMessage: (editor, message) => {
+        if (message.type === OrderedListEditorActionType.ToggleOrderedList) {
+            editor.chain().focus().toggleOrderedList().run();
+        }
+        return false;
+    },
+    extendEditorInstance: (sendBridgeMessage) => {
+        return {
+            toggleOrderedList: () => sendBridgeMessage({
+                type: OrderedListEditorActionType.ToggleOrderedList,
+            }),
+        };
+    },
+    extendEditorState: (editor) => {
+        return {
+            canToggleOrderedList: editor.can().toggleOrderedList(),
+            isOrderedListActive: editor.isActive('orderedList'),
+        };
+    },
+});
