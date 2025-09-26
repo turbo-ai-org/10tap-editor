@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Platform, StyleSheet, TextInput, Keyboard } from 'react-native';
+import { Platform, StyleSheet, TextInput, Keyboard, View } from 'react-native';
 import {
   WebView,
   type WebViewProps,
@@ -137,7 +137,7 @@ export const RichText = ({
   return (
     <GestureHandlerRootView style={RichTextStyles.fullScreen}>
       <GestureDetector gesture={swipeGesture}>
-        <>
+        <View style={RichTextStyles.fullScreen}>
           {editor.autofocus && Platform.OS === 'android' && (
             <TextInput autoFocus style={styles.hiddenInput} />
           )}
@@ -175,7 +175,7 @@ export const RichText = ({
           props.onLoad && props.onLoad(e);
         }}
           />
-        </>
+        </View>
       </GestureDetector>
     </GestureHandlerRootView>
   );
