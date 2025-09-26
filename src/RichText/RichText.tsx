@@ -120,11 +120,11 @@ export const RichText = ({
   // Create pan responder for swipe to dismiss keyboard
   const panResponder = useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
+      onMoveShouldSetPanResponder: (_evt, gestureState) => {
         // Only respond if swiping down
         return gestureState.dy > 10 && Math.abs(gestureState.dx) < Math.abs(gestureState.dy);
       },
-      onPanResponderRelease: (evt, gestureState) => {
+      onPanResponderRelease: (_evt, gestureState) => {
         // If swiped down more than 50 pixels, dismiss keyboard
         if (gestureState.dy > 50) {
           Keyboard.dismiss();
