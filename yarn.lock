@@ -61,7 +61,6 @@ __metadata:
     react-dom: ^18.2.0
     react-native: 0.73.2
     react-native-builder-bob: ^0.20.0
-    react-native-gesture-handler: ^2.28.0
     react-native-webview: ^13.7.1
     release-it: ^15.0.0
     rimraf: ^5.0.5
@@ -4007,15 +4006,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@egjs/hammerjs@npm:^2.0.17":
-  version: 2.0.17
-  resolution: "@egjs/hammerjs@npm:2.0.17"
-  dependencies:
-    "@types/hammerjs": ^2.0.36
-  checksum: 8945137cec5837edd70af3f2e0ea621543eb0aa3b667e6269ec6485350f4d120c2434b37c7c30b1cf42a65275dd61c1f24626749c616696d3956ac0c008c4766
-  languageName: node
-  linkType: hard
-
 "@emnapi/core@npm:^0.45.0":
   version: 0.45.0
   resolution: "@emnapi/core@npm:0.45.0"
@@ -7828,13 +7818,6 @@ __metadata:
   version: 0.0.12
   resolution: "@types/gtag.js@npm:0.0.12"
   checksum: 34efc27fbfd0013255b8bfd4af38ded9d5a6ba761130c76f17fd3a9585d83acc88d8005aab667cfec4bdec0e7c7217f689739799a8f61aed0edb929be58b162e
-  languageName: node
-  linkType: hard
-
-"@types/hammerjs@npm:^2.0.36":
-  version: 2.0.46
-  resolution: "@types/hammerjs@npm:2.0.46"
-  checksum: caba6ec788d19905c71092670b58514b3d1f5eee5382bf9205e8df688d51e7857b7994e2dd7aed57fac8977bdf0e456d67fbaf23440a4385b8ce25fe2af1ec39
   languageName: node
   linkType: hard
 
@@ -14387,7 +14370,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.1.0, hoist-non-react-statics@npm:^3.3.0":
+"hoist-non-react-statics@npm:^3.1.0":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -21454,20 +21437,6 @@ __metadata:
   bin:
     bob: bin/bob
   checksum: 258da6ecd03be52cc05a3e3a7c481890c7c0b7b62ae9f263c5f3d6fafeae95bd9445ad2f6c2513f7f4e4569eee935a18ae94c7491f58d6916af515c88de9e0a1
-  languageName: node
-  linkType: hard
-
-"react-native-gesture-handler@npm:^2.28.0":
-  version: 2.28.0
-  resolution: "react-native-gesture-handler@npm:2.28.0"
-  dependencies:
-    "@egjs/hammerjs": ^2.0.17
-    hoist-non-react-statics: ^3.3.0
-    invariant: ^2.2.4
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 7bcd7db784b12565fdd5916bbebc2d3511a63159ca553d33e430008940ba7d209f1e85ef02968a920ed19c414fabe7d2c18cc0e967dd4889aae266788562d1e9
   languageName: node
   linkType: hard
 

@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Platform, StyleSheet, TextInput, Keyboard, View } from 'react-native';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { Platform, StyleSheet, TextInput, Keyboard, View, PanResponder } from 'react-native';
 import {
   WebView,
   type WebViewProps,
   type WebViewMessageEvent,
 } from 'react-native-webview';
-import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { editorHtml } from '../simpleWebEditor/build/editorHtml';
 
@@ -118,30 +117,34 @@ export const RichText = ({
     [editor.bridgeExtensions]
   );
 
-  // Create swipe down gesture to dismiss keyboard
-  const swipeGesture = Gesture.Pan()
-    .onUpdate((event) => {
-      // Only trigger if swiping down with enough velocity
-      if (event.translationY > 50 && event.velocityY > 100) {
-        Keyboard.dismiss();
-        // Also blur the editor
-        if (editor.webviewRef.current) {
-          editor.webviewRef.current.injectJavaScript(`
-            document.activeElement?.blur();
-            true;
-          `);
+  // Create pan responder for swipe to dismiss keyboard
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        // Only respond if swiping down
+        return gestureState.dy > 10 && Math.abs(gestureState.dx) < Math.abs(gestureState.dy);
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        // If swiped down more than 50 pixels, dismiss keyboard
+        if (gestureState.dy > 50) {
+          Keyboard.dismiss();
+          if (editor.webviewRef.current) {
+            editor.webviewRef.current.injectJavaScript(`
+              document.activeElement?.blur();
+              true;
+            `);
+          }
         }
-      }
-    });
+      },
+    })
+  ).current;
 
   return (
-    <GestureHandlerRootView style={RichTextStyles.fullScreen}>
-      <GestureDetector gesture={swipeGesture}>
-        <View style={RichTextStyles.fullScreen}>
-          {editor.autofocus && Platform.OS === 'android' && (
-            <TextInput autoFocus style={styles.hiddenInput} />
-          )}
-          <WebView
+    <View style={RichTextStyles.fullScreen} {...panResponder.panHandlers}>
+      {editor.autofocus && Platform.OS === 'android' && (
+        <TextInput autoFocus style={styles.hiddenInput} />
+      )}
+      <WebView
             scrollEnabled={false}
             key={key}
         style={[
@@ -174,10 +177,8 @@ export const RichText = ({
           }
           props.onLoad && props.onLoad(e);
         }}
-          />
-        </View>
-      </GestureDetector>
-    </GestureHandlerRootView>
+      />
+    </View>
   );
 };
 
