@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, Keyboard } from 'react-native';
 import { Images } from '../../assets';
 import { EditorActionType } from '../../types/Actions';
 import type { EditorBridge } from '../../types';
@@ -187,6 +187,21 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
     active: () => false,
     disabled: ({ editorState }) => !editorState.canRedo,
     image: () => Images.redo,
+  },
+  {
+    onPress:
+      ({ editor }) =>
+      () => {
+        Keyboard.dismiss();
+        // Also blur the editor
+        editor.webviewRef?.current?.injectJavaScript(`
+          document.activeElement?.blur();
+          true;
+        `);
+      },
+    active: () => false,
+    disabled: () => false,
+    image: () => Images.keyboardDismiss,
   },
 ];
 
