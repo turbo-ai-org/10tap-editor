@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Platform, StyleSheet, TextInput } from 'react-native';
+import { Platform, StyleSheet, TextInput, Keyboard } from 'react-native';
 import {
   WebView,
   type WebViewProps,
   type WebViewMessageEvent,
 } from 'react-native-webview';
+import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { editorHtml } from '../simpleWebEditor/build/editorHtml';
 
@@ -117,14 +118,32 @@ export const RichText = ({
     [editor.bridgeExtensions]
   );
 
+  // Create swipe down gesture to dismiss keyboard
+  const swipeGesture = Gesture.Pan()
+    .onUpdate((event) => {
+      // Only trigger if swiping down with enough velocity
+      if (event.translationY > 50 && event.velocityY > 100) {
+        Keyboard.dismiss();
+        // Also blur the editor
+        if (editor.webviewRef.current) {
+          editor.webviewRef.current.injectJavaScript(`
+            document.activeElement?.blur();
+            true;
+          `);
+        }
+      }
+    });
+
   return (
-    <>
-      {editor.autofocus && Platform.OS === 'android' && (
-        <TextInput autoFocus style={styles.hiddenInput} />
-      )}
-      <WebView
-        scrollEnabled={false}
-        key={key}
+    <GestureHandlerRootView style={RichTextStyles.fullScreen}>
+      <GestureDetector gesture={swipeGesture}>
+        <>
+          {editor.autofocus && Platform.OS === 'android' && (
+            <TextInput autoFocus style={styles.hiddenInput} />
+          )}
+          <WebView
+            scrollEnabled={false}
+            key={key}
         style={[
           RichTextStyles.fullScreen,
           { display: loaded ? 'flex' : 'none' },
@@ -155,8 +174,10 @@ export const RichText = ({
           }
           props.onLoad && props.onLoad(e);
         }}
-      />
-    </>
+          />
+        </>
+      </GestureDetector>
+    </GestureHandlerRootView>
   );
 };
 

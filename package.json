@@ -230,6 +230,7 @@
     "@tiptap/react": "^3.0.0",
     "@tiptap/starter-kit": "^3.0.0",
     "lodash": "^4.17.21",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-native-gesture-handler": "^2.28.0"
   }
 }
