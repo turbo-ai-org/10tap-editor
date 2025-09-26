@@ -39,6 +39,21 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
   {
     onPress:
       ({ editor }) =>
+      () => {
+        Keyboard.dismiss();
+        // Also blur the editor
+        editor.webviewRef?.current?.injectJavaScript(`
+          document.activeElement?.blur();
+          true;
+        `);
+      },
+    active: () => false,
+    disabled: () => false,
+    image: () => Images.keyboardDismiss,
+  },
+  {
+    onPress:
+      ({ editor }) =>
       () =>
         editor.toggleBold(),
     active: ({ editorState }) => editorState.isBoldActive,
@@ -187,21 +202,6 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
     active: () => false,
     disabled: ({ editorState }) => !editorState.canRedo,
     image: () => Images.redo,
-  },
-  {
-    onPress:
-      ({ editor }) =>
-      () => {
-        Keyboard.dismiss();
-        // Also blur the editor
-        editor.webviewRef?.current?.injectJavaScript(`
-          document.activeElement?.blur();
-          true;
-        `);
-      },
-    active: () => false,
-    disabled: () => false,
-    image: () => Images.keyboardDismiss,
   },
 ];
 
