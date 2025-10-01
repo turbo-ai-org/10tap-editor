@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity, View, type ImageStyle } from 'react-native';
 import type { ToolbarItem } from './actions';
 import type { EditorBridge } from '../../types';
 
@@ -14,6 +14,21 @@ export const ToolbarItemComp = ({
   editor: EditorBridge;
   args: Parameters<ToolbarItem['onPress']>[0];
 }) => {
+  // Get the appropriate tint color based on state
+  const getTintColor = (): string | undefined => {
+    const iconDisabled = editor.theme.toolbar.iconDisabled as ImageStyle | undefined;
+    const iconActive = editor.theme.toolbar.iconActive as ImageStyle | undefined;
+    const icon = editor.theme.toolbar.icon as ImageStyle | undefined;
+
+    if (disabled(args) && iconDisabled?.tintColor) {
+      return iconDisabled.tintColor as string;
+    }
+    if (active(args) && iconActive?.tintColor) {
+      return iconActive.tintColor as string;
+    }
+    return icon?.tintColor as string | undefined;
+  };
+
   return (
     <TouchableOpacity
       onPress={onPress(args)}
@@ -35,6 +50,7 @@ export const ToolbarItemComp = ({
             disabled(args) ? editor.theme.toolbar.iconDisabled : undefined,
           ]}
           resizeMode="contain"
+          tintColor={getTintColor()}
         />
       </View>
     </TouchableOpacity>
