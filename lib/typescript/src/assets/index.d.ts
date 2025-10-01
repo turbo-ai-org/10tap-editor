@@ -23,5 +23,7 @@ export declare const Images: {
     Aa: any;
     a: any;
     close: any;
+    keyboard: any;
+    keyboardDismiss: any;
 };
 //# sourceMappingURL=index.d.ts.map

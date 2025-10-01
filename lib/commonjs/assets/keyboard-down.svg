@@ -1,0 +1,25 @@
+<svg width="112" height="112" viewBox="0 0 112 112" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Keyboard -->
+  <rect x="16" y="28" width="80" height="48" rx="4" stroke="black" stroke-width="8" fill="none"/>
+
+  <!-- Keyboard keys (rows) -->
+  <rect x="24" y="36" width="8" height="8" fill="black"/>
+  <rect x="36" y="36" width="8" height="8" fill="black"/>
+  <rect x="48" y="36" width="8" height="8" fill="black"/>
+  <rect x="60" y="36" width="8" height="8" fill="black"/>
+  <rect x="72" y="36" width="8" height="8" fill="black"/>
+  <rect x="84" y="36" width="8" height="8" fill="black"/>
+
+  <rect x="24" y="48" width="8" height="8" fill="black"/>
+  <rect x="36" y="48" width="8" height="8" fill="black"/>
+  <rect x="48" y="48" width="8" height="8" fill="black"/>
+  <rect x="60" y="48" width="8" height="8" fill="black"/>
+  <rect x="72" y="48" width="8" height="8" fill="black"/>
+  <rect x="84" y="48" width="8" height="8" fill="black"/>
+
+  <!-- Space bar -->
+  <rect x="32" y="60" width="48" height="8" fill="black"/>
+
+  <!-- Down arrow -->
+  <path d="M56 84 L44 96 L56 108" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" transform="rotate(90 56 96)"/>
+</svg>

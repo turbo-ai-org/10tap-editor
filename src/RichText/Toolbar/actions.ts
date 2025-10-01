@@ -49,7 +49,7 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
       },
     active: () => false,
     disabled: () => false,
-    image: () => Images.keyboardDismiss,
+    image: () => Images.keyboard,
   },
   {
     onPress:
