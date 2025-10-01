@@ -50,7 +50,13 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
     active: () => false,
     disabled: () => false,
     image: () => Images.keyboard,
+    customWidth: 80,
+    customIconWidth: 40,
+    customIconHeight: 30,
   },
+  {
+    isDivider: true,
+  } as any,
   {
     onPress:
       ({ editor }) =>
@@ -87,6 +93,9 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
     disabled: ({ editorState }) => !editorState.canToggleHeading,
     image: () => Images.Aa,
   },
+  {
+    isDivider: true,
+  } as any,
   {
     onPress:
       ({ editor }) =>

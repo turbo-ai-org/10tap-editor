@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Platform } from 'react-native';
+import { FlatList, StyleSheet, Platform, View } from 'react-native';
 import { useBridgeState } from '../useBridgeState';
 import React from 'react';
 import {
@@ -77,6 +77,19 @@ export function Toolbar({
             hideToolbar ? editor.theme.toolbar.hidden : undefined,
           ]}
           renderItem={({ item }) => {
+            if ((item as any).isDivider) {
+              return (
+                <View
+                  style={{
+                    width: 1,
+                    height: 30,
+                    backgroundColor: '#3B3D46',
+                    marginHorizontal: 8,
+                    alignSelf: 'center',
+                  }}
+                />
+              );
+            }
             return <ToolbarItemComp {...item} args={args} editor={editor} />;
           }}
           horizontal
