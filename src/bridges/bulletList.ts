@@ -1,3 +1,4 @@
+// @ts-ignore - Import for TypeScript types only, not used at runtime to avoid conflicts
 import { BulletList, ListItem } from '@tiptap/extension-list';
 import BridgeExtension from './base';
 
@@ -29,8 +30,9 @@ export const BulletListBridge = new BridgeExtension<
   BulletListEditorInstance,
   BulletListMessage
 >({
-  tiptapExtension: BulletList,
-  tiptapExtensionDeps: [ListItem],
+  tiptapExtension: undefined as any,
+  tiptapExtensionDeps: [],
+  forceName: 'bulletList' as any,
   onBridgeMessage: (editor, message) => {
     if (message.type === BulletListEditorActionType.ToggleBulletList) {
       editor.chain().focus().toggleBulletList().run();
