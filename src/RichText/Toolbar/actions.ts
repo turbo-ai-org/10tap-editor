@@ -1,4 +1,4 @@
-import { Platform, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
 import { Images } from '../../assets';
 import { EditorActionType } from '../../types/Actions';
 import type { EditorBridge } from '../../types';
