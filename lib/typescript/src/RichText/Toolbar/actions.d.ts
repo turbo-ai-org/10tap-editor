@@ -30,6 +30,9 @@ export interface ToolbarItem {
     active: ({ editor, editorState }: ArgsToolbarCB) => boolean;
     disabled: ({ editor, editorState }: ArgsToolbarCB) => boolean;
     image: ({ editor, editorState }: ArgsToolbarCB) => any;
+    customWidth?: number;
+    customIconWidth?: number;
+    customIconHeight?: number;
 }
 export declare const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[];
 export declare const HEADING_ITEMS: ToolbarItem[];
