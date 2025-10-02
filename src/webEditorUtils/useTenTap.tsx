@@ -106,7 +106,25 @@ export const useTenTap = (options?: useTenTapArgs) => {
     // Subscribe to editor message
     const handleEditorAction = (action: any) => {
       bridges.forEach((e) => {
-        e.onBridgeMessage && e.onBridgeMessage(editor, action, sendMessage);
+        if (e.onBridgeMessage) {
+          try {
+            e.onBridgeMessage(editor, action, sendMessage);
+          } catch (error: any) {
+            sendMessage({
+              type: 'log' as any,
+              payload: {
+                event: 'Bridge message handler error',
+                bridge: e.name,
+                action: action?.type,
+                error: {
+                  message: error?.message,
+                  stack: error?.stack,
+                  name: error?.name
+                }
+              }
+            });
+          }
+        }
       });
     };
     const handleWebviewMessage = (event: MessageEvent | Event) => {

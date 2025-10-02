@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Platform, StyleSheet, TextInput, Keyboard, View, PanResponder } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  TextInput,
+  Keyboard,
+  View,
+  PanResponder,
+} from 'react-native';
 import {
   WebView,
   type WebViewProps,
