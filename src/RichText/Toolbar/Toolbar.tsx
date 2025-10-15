@@ -76,6 +76,9 @@ export function Toolbar({
             editor.theme.toolbar.toolbarBody,
             hideToolbar ? editor.theme.toolbar.hidden : undefined,
           ]}
+          contentContainerStyle={{
+            paddingHorizontal: 8,
+          }}
           renderItem={({ item }) => {
             if ((item as any).isDivider) {
               return (

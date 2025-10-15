@@ -42,6 +42,10 @@ export const ToolbarItemComp = ({
       style={[
         editor.theme.toolbar.toolbarButton,
         customWidth ? { width: customWidth } : undefined,
+        {
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
       ]}
     >
       <View
