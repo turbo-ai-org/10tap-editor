@@ -77,7 +77,7 @@ export function Toolbar({
             hideToolbar ? editor.theme.toolbar.hidden : undefined,
           ]}
           contentContainerStyle={{
-            paddingHorizontal: 8,
+            paddingHorizontal: 4,
           }}
           renderItem={({ item }) => {
             if ((item as any).isDivider) {
@@ -86,8 +86,8 @@ export function Toolbar({
                   style={{
                     width: 1,
                     height: 30,
-                    backgroundColor: '#3B3D46',
-                    marginHorizontal: 8,
+                    backgroundColor: '#EAEAEA',
+                    marginHorizontal: 4,
                     alignSelf: 'center',
                   }}
                 />

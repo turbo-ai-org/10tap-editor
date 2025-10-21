@@ -200,6 +200,7 @@
     ]
   },
   "dependencies": {
+    "@expo/vector-icons": "^15.0.2",
     "@tiptap/core": "^3.0.0",
     "@tiptap/extension-blockquote": "^3.0.0",
     "@tiptap/extension-bold": "^3.0.0",
