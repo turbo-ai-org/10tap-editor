@@ -145,7 +145,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(1),
     active: ({ editorState }) => editorState.headingLevel === 1,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => Images.H1,
+    image: () => Images.h1,
   },
   {
     onPress:
@@ -154,7 +154,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(2),
     active: ({ editorState }) => editorState.headingLevel === 2,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => Images.H2,
+    image: () => Images.h2,
   },
   {
     onPress:
@@ -163,7 +163,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(3),
     active: ({ editorState }) => editorState.headingLevel === 3,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => Images.H3,
+    image: () => Images.h3,
   },
   {
     onPress:
@@ -172,7 +172,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(4),
     active: ({ editorState }) => editorState.headingLevel === 4,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => Images.H4,
+    image: () => Images.h4,
   },
   {
     onPress:
@@ -181,7 +181,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(5),
     active: ({ editorState }) => editorState.headingLevel === 5,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => Images.H5,
+    image: () => Images.h5,
   },
   {
     onPress:
@@ -190,6 +190,6 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(6),
     active: ({ editorState }) => editorState.headingLevel === 6,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => Images.H6,
+    image: () => Images.h6,
   },
 ];

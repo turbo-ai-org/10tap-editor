@@ -8,7 +8,16 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Read(//Users/griffinhuth/Documents/Work/10tap-editor/.github/**)"
+      "Read(//Users/griffinhuth/Documents/Work/10tap-editor/.github/**)",
+      "Bash(git ls-tree:*)",
+      "Bash(git fetch:*)",
+      "Read(//private/tmp/**)",
+      "Bash(tar:*)",
+      "Read(//tmp/package/src/**)",
+      "Bash(git branch:*)",
+      "Read(//Users/griffinhuth/Documents/Work/react-native-mobile-app/node_modules/@10play/**)",
+      "Bash(npm pack:*)",
+      "Bash(npm view:*)"
     ],
     "deny": [],
     "ask": []
