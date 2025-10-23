@@ -1,12 +1,5 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  TextInput,
-  Keyboard,
-  View,
-  PanResponder,
-} from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Platform, StyleSheet, TextInput, View } from 'react-native';
 import {
   WebView,
   type WebViewProps,
@@ -17,6 +10,7 @@ import { editorHtml } from '../simpleWebEditor/build/editorHtml';
 
 import { type EditorMessage } from '../types/Messaging';
 import { useKeyboard } from '../utils';
+// No animations needed in patch - EditorBridge handles all gesture animations
 import type { EditorBridge } from '../types';
 import { getInjectedJS, getInjectedJSBeforeContentLoad } from './utils';
 import { isFabric } from '../utils/misc';
@@ -54,6 +48,8 @@ export const RichText = ({
   exclusivelyUseCustomOnMessage = true,
   ...props
 }: RichTextProps) => {
+  // iOS Notes-style gesture detection (no keyboard animation - only gesture detection for dismissal)
+
   const [editorHeight, setEditorHeight] = useState(0);
   const [key, setKey] = useState('webview');
   const [loaded, setLoaded] = useState(isFabric());
@@ -65,6 +61,12 @@ export const RichText = ({
         baseUrl: editor.webviewBaseURL,
       };
 
+  // No keyboard tracking needed - EditorBridge handles all gesture logic
+
+  // No keyboard animation - let native keyboard work normally
+
+  // No gesture handling in patch - EditorBridge handles everything
+
   const onWebviewMessage = (event: WebViewMessageEvent) => {
     onMessage && onMessage(event);
     if (exclusivelyUseCustomOnMessage && onMessage) return;
@@ -72,14 +74,28 @@ export const RichText = ({
     const { data } = event.nativeEvent;
     // on expo-web we sometimes get react-dev messages that come in as objects - so we ignore these
     if (typeof data !== 'string') return;
-    // Parse the message sent from the editor
-    const { type, payload } = JSON.parse(data) as EditorMessage;
-    if (type === CoreEditorActionType.DocumentHeight) {
-      setEditorHeight(payload);
+
+    try {
+      // Parse the message sent from the editor
+      const message = JSON.parse(data);
+      const { type, payload } = message as EditorMessage;
+
+      // Let gesture messages pass through to parent onMessage handler
+      // if (['gestureStart', 'gestureUpdate', 'gestureEnd'].includes(type)) {
+      //   handleGestureMessage(type, message);
+      //   return;
+      // }
+
+      if (type === CoreEditorActionType.DocumentHeight) {
+        setEditorHeight(payload);
+      }
+
+      editor.bridgeExtensions?.forEach((e) => {
+        e.onEditorMessage && e.onEditorMessage({ type, payload }, editor);
+      });
+    } catch (error) {
+      // Ignore parsing errors for non-JSON messages
     }
-    editor.bridgeExtensions?.forEach((e) => {
-      e.onEditorMessage && e.onEditorMessage({ type, payload }, editor);
-    });
   };
 
   useEffect(() => {
@@ -124,67 +140,47 @@ export const RichText = ({
     [editor.bridgeExtensions]
   );
 
-  // Create pan responder for swipe to dismiss keyboard
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_evt, gestureState) => {
-        // Only respond if swiping down
-        return gestureState.dy > 10 && Math.abs(gestureState.dx) < Math.abs(gestureState.dy);
-      },
-      onPanResponderRelease: (_evt, gestureState) => {
-        // If swiped down more than 50 pixels, dismiss keyboard
-        if (gestureState.dy > 50) {
-          Keyboard.dismiss();
-          if (editor.webviewRef.current) {
-            editor.webviewRef.current.injectJavaScript(`
-              document.activeElement?.blur();
-              true;
-            `);
-          }
-        }
-      },
-    })
-  ).current;
-
   return (
-    <View style={RichTextStyles.fullScreen} {...panResponder.panHandlers}>
-      {editor.autofocus && Platform.OS === 'android' && (
-        <TextInput autoFocus style={styles.hiddenInput} />
-      )}
-      <WebView
-            scrollEnabled={false}
-            key={key}
-        style={[
-          RichTextStyles.fullScreen,
-          { display: loaded ? 'flex' : 'none' },
-          editor.theme.webview,
-        ]}
-        containerStyle={[
-          editor.theme.webviewContainer,
-          { height: editor.dynamicHeight ? editorHeight : undefined },
-        ]}
-        source={source}
-        injectedJavaScript={injectedJavaScript}
-        injectedJavaScriptBeforeContentLoaded={getInjectedJSBeforeContentLoad(
-          editor
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        {editor.autofocus && Platform.OS === 'android' && (
+          <TextInput autoFocus style={styles.hiddenInput} />
         )}
-        hideKeyboardAccessoryView={true}
-        onMessage={onWebviewMessage}
-        ref={editor.webviewRef}
-        webviewDebuggingEnabled={__DEV__}
-        keyboardDisplayRequiresUserAction={false}
-        {...props}
-        // Propagated Props
-        onLoad={(e) => {
-          setLoaded(true);
-          // This is a workaround for iOS to make sure the webview is loaded
-          // See https://github.com/react-native-webview/react-native-webview/issues/3578
-          if (Platform.OS === 'ios' && key === 'webview') {
-            setKey('webview_reloaded');
-          }
-          props.onLoad && props.onLoad(e);
-        }}
-      />
+        <WebView
+          scrollEnabled={false}
+          key={key}
+          style={[
+            RichTextStyles.fullScreen,
+            { display: loaded ? 'flex' : 'none' },
+            editor.theme.webview,
+          ]}
+          containerStyle={[
+            editor.theme.webviewContainer,
+            { height: editor.dynamicHeight ? editorHeight : undefined },
+          ]}
+          source={source}
+          injectedJavaScript={injectedJavaScript}
+          injectedJavaScriptBeforeContentLoaded={getInjectedJSBeforeContentLoad(
+            editor
+          )}
+          hideKeyboardAccessoryView={true}
+          onMessage={onWebviewMessage}
+          ref={editor.webviewRef}
+          webviewDebuggingEnabled={__DEV__}
+          keyboardDisplayRequiresUserAction={false}
+          {...props}
+          // Propagated Props
+          onLoad={(e) => {
+            setLoaded(true);
+            // This is a workaround for iOS to make sure the webview is loaded
+            // See https://github.com/react-native-webview/react-native-webview/issues/3578
+            if (Platform.OS === 'ios' && key === 'webview') {
+              setKey('webview_reloaded');
+            }
+            props.onLoad && props.onLoad(e);
+          }}
+        />
+      </View>
     </View>
   );
 };

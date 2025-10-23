@@ -67,7 +67,7 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
         editor.toggleBold(),
     active: ({ editorState }) => editorState.isBoldActive,
     disabled: ({ editorState }) => !editorState.canToggleBold,
-    image: () => 'format-bold',
+    image: () => Images.bold,
   },
   {
     onPress:
@@ -76,7 +76,7 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
         editor.toggleItalic(),
     active: ({ editorState }) => editorState.isItalicActive,
     disabled: ({ editorState }) => !editorState.canToggleItalic,
-    image: () => 'format-italic',
+    image: () => Images.italic,
   },
   {
     onPress:
@@ -85,7 +85,7 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
         editor.toggleUnderline(),
     active: ({ editorState }) => editorState.isUnderlineActive,
     disabled: ({ editorState }) => !editorState.canToggleUnderline,
-    image: () => 'format-underline',
+    image: () => Images.underline,
   },
   {
     onPress:
@@ -106,7 +106,7 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
         editor.toggleOrderedList(),
     active: ({ editorState }) => editorState.isOrderedListActive,
     disabled: ({ editorState }) => !editorState.canToggleOrderedList,
-    image: () => 'format-list-numbered',
+    image: () => Images.orderedList,
   },
   {
     onPress:
@@ -115,7 +115,7 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
         editor.toggleBulletList(),
     active: ({ editorState }) => editorState.isBulletListActive,
     disabled: ({ editorState }) => !editorState.canToggleBulletList,
-    image: () => 'format-list-bulleted',
+    image: () => Images.bulletList,
   },
   {
     onPress:
@@ -136,7 +136,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         setToolbarContext(ToolbarContext.Main),
     active: () => false,
     disabled: () => false,
-    image: () => 'close',
+    image: () => Images.close,
   },
   {
     onPress:
@@ -145,7 +145,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(1),
     active: ({ editorState }) => editorState.headingLevel === 1,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => 'format-header-1',
+    image: () => Images.H1,
   },
   {
     onPress:
@@ -154,7 +154,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(2),
     active: ({ editorState }) => editorState.headingLevel === 2,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => 'format-header-2',
+    image: () => Images.H2,
   },
   {
     onPress:
@@ -163,7 +163,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(3),
     active: ({ editorState }) => editorState.headingLevel === 3,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => 'format-header-3',
+    image: () => Images.H3,
   },
   {
     onPress:
@@ -172,7 +172,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(4),
     active: ({ editorState }) => editorState.headingLevel === 4,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => 'format-header-4',
+    image: () => Images.H4,
   },
   {
     onPress:
@@ -181,7 +181,7 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(5),
     active: ({ editorState }) => editorState.headingLevel === 5,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => 'format-header-5',
+    image: () => Images.H5,
   },
   {
     onPress:
@@ -190,6 +190,6 @@ export const HEADING_ITEMS: ToolbarItem[] = [
         editor.toggleHeading(6),
     active: ({ editorState }) => editorState.headingLevel === 6,
     disabled: ({ editorState }) => !editorState.canToggleHeading,
-    image: () => 'format-header-6',
+    image: () => Images.H6,
   },
 ];

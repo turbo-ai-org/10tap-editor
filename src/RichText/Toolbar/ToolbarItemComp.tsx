@@ -1,6 +1,5 @@
 import React from 'react';
 import { Image, TouchableOpacity, View, type ImageStyle } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { ToolbarItem } from './actions';
 import type { EditorBridge } from '../../types';
 
@@ -62,30 +61,22 @@ export const ToolbarItemComp = ({
             : undefined,
         ]}
       >
-        {typeof image(args) === 'string' ? (
-          <MaterialCommunityIcons
-            name={image(args) as any}
-            size={customIconWidth || (editor.theme.toolbar.icon as any).width || 24}
-            color={getTintColor()}
-          />
-        ) : (
-          <Image
-            source={image(args)}
-            style={[
-              editor.theme.toolbar.icon,
-              active(args) ? editor.theme.toolbar.iconActive : undefined,
-              disabled(args) ? editor.theme.toolbar.iconDisabled : undefined,
-              customIconWidth || customIconHeight
-                ? {
-                    width: customIconWidth || (editor.theme.toolbar.icon as any).width,
-                    height: customIconHeight || (editor.theme.toolbar.icon as any).height,
-                  }
-                : undefined,
-            ]}
-            resizeMode="contain"
-            tintColor={getTintColor()}
-          />
-        )}
+        <Image
+          source={image(args)}
+          style={[
+            editor.theme.toolbar.icon,
+            active(args) ? editor.theme.toolbar.iconActive : undefined,
+            disabled(args) ? editor.theme.toolbar.iconDisabled : undefined,
+            customIconWidth || customIconHeight
+              ? {
+                  width: customIconWidth || (editor.theme.toolbar.icon as any).width,
+                  height: customIconHeight || (editor.theme.toolbar.icon as any).height,
+                }
+              : undefined,
+          ]}
+          resizeMode="contain"
+          tintColor={getTintColor()}
+        />
       </View>
     </TouchableOpacity>
   );
