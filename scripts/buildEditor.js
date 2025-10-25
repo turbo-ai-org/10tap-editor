@@ -8,12 +8,13 @@ const htmlDir = path.join(htmlPath, '../');
 const editorTsPath = process.argv[3] || path.join(htmlDir, 'editorHtml.ts');
 
 const createContent = (html) => {
-  html = html.replace(/([`$])/g, '\\$1');
+  // Escape backslashes first, then backticks and dollar signs
+  html = html.replace(/\\/g, '\\\\').replace(/([`$])/g, '\\$1');
   return (
     '/* eslint-disable */\n' +
-    'export const editorHtml = String.raw`\n' +
+    'export const editorHtml = `\n' +
     html +
-    "\n`.replace(/\\\\([`$])/g, '\\$1')"
+    "\n`"
   );
 };
 
