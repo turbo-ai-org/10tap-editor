@@ -215,6 +215,7 @@
     "@tiptap/pm": "^3.0.0",
     "@tiptap/react": "^3.0.0",
     "@tiptap/starter-kit": "^3.0.0",
+    "expo-blur": "^15.0.7",
     "lodash": "^4.17.21",
     "react-dom": "^18.2.0"
   }

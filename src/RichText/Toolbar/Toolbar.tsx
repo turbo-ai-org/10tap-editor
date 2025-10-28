@@ -12,6 +12,7 @@ import { useKeyboard } from '../../utils';
 import type { EditorBridge } from '../../types';
 import { ToolbarItemComp } from './ToolbarItemComp';
 import { WebToolbar } from './WebToolbar';
+import { BlurView } from 'expo-blur';
 
 interface ToolbarProps {
   editor: EditorBridge;
@@ -66,37 +67,46 @@ export function Toolbar({
         );
       }
       return (
-        <FlatList
-          data={
-            toolbarContext === ToolbarContext.Main
-              ? filteredItems
-              : HEADING_ITEMS
-          }
+        <BlurView
+          intensity={85}
+          tint="systemMaterial"
           style={[
             editor.theme.toolbar.toolbarBody,
             hideToolbar ? editor.theme.toolbar.hidden : undefined,
+            { overflow: 'hidden' }
           ]}
-          contentContainerStyle={{
-            paddingHorizontal: 4,
-          }}
-          renderItem={({ item }) => {
-            if ((item as any).isDivider) {
-              return (
-                <View
-                  style={{
-                    width: 1,
-                    height: 30,
-                    backgroundColor: '#EAEAEA',
-                    marginHorizontal: 4,
-                    alignSelf: 'center',
-                  }}
-                />
-              );
+        >
+          <FlatList
+            data={
+              toolbarContext === ToolbarContext.Main
+                ? filteredItems
+                : HEADING_ITEMS
             }
-            return <ToolbarItemComp {...item} args={args} editor={editor} />;
-          }}
-          horizontal
-        />
+            style={{
+              backgroundColor: 'transparent',
+            }}
+            contentContainerStyle={{
+              paddingHorizontal: 4,
+            }}
+            renderItem={({ item }) => {
+              if ((item as any).isDivider) {
+                return (
+                  <View
+                    style={{
+                      width: 1,
+                      height: 30,
+                      backgroundColor: '#EAEAEA',
+                      marginHorizontal: 4,
+                      alignSelf: 'center',
+                    }}
+                  />
+                );
+              }
+              return <ToolbarItemComp {...item} args={args} editor={editor} />;
+            }}
+            horizontal
+          />
+        </BlurView>
       );
     case ToolbarContext.Link:
       return (
