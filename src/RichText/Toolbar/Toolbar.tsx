@@ -73,7 +73,12 @@ export function Toolbar({
           style={[
             editor.theme.toolbar.toolbarBody,
             hideToolbar ? editor.theme.toolbar.hidden : undefined,
-            { overflow: 'hidden' }
+            {
+              overflow: 'hidden',
+              borderWidth: 0.5,
+              borderColor: 'rgba(0, 0, 0, 0.1)',
+              borderRadius: 14,
+            }
           ]}
         >
           <FlatList
@@ -84,9 +89,14 @@ export function Toolbar({
             }
             style={{
               backgroundColor: 'transparent',
+              flex: 1,
+              justifyContent: 'center',
             }}
             contentContainerStyle={{
               paddingHorizontal: 4,
+              alignItems: 'center',
+              flexGrow: 1,
+              justifyContent: 'center',
             }}
             renderItem={({ item }) => {
               if ((item as any).isDivider) {
