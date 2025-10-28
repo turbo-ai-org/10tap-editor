@@ -94,12 +94,13 @@ export function Toolbar({
             }
             style={{
               backgroundColor: 'transparent',
-              // minHeight: '100%'
+              flex: 1,
               height: '100%',
             }}
             contentContainerStyle={{
               paddingHorizontal: 4,
               alignItems: 'center',
+              minHeight: '100%',
             }}
             renderItem={({ item }) => {
               if ((item as any).isDivider) {
