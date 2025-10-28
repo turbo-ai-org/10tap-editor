@@ -14,6 +14,7 @@ __metadata:
     "@expo/vector-icons": ^15.0.2
     "@react-native/eslint-config": ^0.72.2
     "@release-it/conventional-changelog": ^5.0.0
+    "@sbaiahmed1/react-native-blur": ^3.2.0
     "@tiptap/core": ^3.0.0
     "@tiptap/extension-blockquote": ^3.0.0
     "@tiptap/extension-bold": ^3.0.0
@@ -4457,6 +4458,16 @@ __metadata:
   version: 4.9.6
   resolution: "@rollup/rollup-win32-x64-msvc@npm:4.9.6"
   conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@sbaiahmed1/react-native-blur@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@sbaiahmed1/react-native-blur@npm:3.2.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 1c604fffd08d1237c81b4b861d93981201b1afa71a2e0d0be7d8cbfa79ac39116b5916710af067f1bdeac181864650195ac4ff6b02ace249226d3020d0e46cf1
   languageName: node
   linkType: hard
 

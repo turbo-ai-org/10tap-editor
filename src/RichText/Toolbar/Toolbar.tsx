@@ -12,7 +12,7 @@ import { useKeyboard } from '../../utils';
 import type { EditorBridge } from '../../types';
 import { ToolbarItemComp } from './ToolbarItemComp';
 import { WebToolbar } from './WebToolbar';
-import { BlurView } from 'expo-blur';
+import { BlurView } from '@sbaiahmed1/react-native-blur';
 
 interface ToolbarProps {
   editor: EditorBridge;
@@ -68,8 +68,9 @@ export function Toolbar({
       }
       return (
         <BlurView
-          intensity={85}
-          tint="systemMaterial"
+          blurType="regular"
+          blurAmount={20}
+          reducedTransparencyFallbackColor="white"
           style={[
             editor.theme.toolbar.toolbarBody,
             hideToolbar ? editor.theme.toolbar.hidden : undefined,

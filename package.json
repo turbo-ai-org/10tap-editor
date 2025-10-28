@@ -185,6 +185,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
+    "@sbaiahmed1/react-native-blur": "^3.2.0",
     "@tiptap/core": "^3.0.0",
     "@tiptap/extension-blockquote": "^3.0.0",
     "@tiptap/extension-bold": "^3.0.0",
