@@ -68,9 +68,9 @@ export function Toolbar({
       }
       return (
         <BlurView
-          blurType="regular"
-          blurAmount={20}
-          reducedTransparencyFallbackColor="white"
+          blurType="systemChromeMaterial"
+          blurAmount={50}
+          reducedTransparencyFallbackColor="#D1D1D6"
           style={[
             editor.theme.toolbar.toolbarBody,
             hideToolbar ? editor.theme.toolbar.hidden : undefined,
@@ -79,7 +79,10 @@ export function Toolbar({
               borderWidth: 0.5,
               borderColor: 'rgba(0, 0, 0, 0.1)',
               borderRadius: 14,
-            }
+              backgroundColor: 'rgba(209, 209, 214, 0.95)',
+              borderTopWidth: 0,
+              borderBottomWidth: 0,
+            },
           ]}
         >
           <FlatList
@@ -89,15 +92,12 @@ export function Toolbar({
                 : HEADING_ITEMS
             }
             style={{
-              backgroundColor: 'transparent',
-              flex: 1,
-              justifyContent: 'center',
+              backgroundColor: 'rgba(209, 209, 214, 0.95)',
+              minHeight: '100%',
             }}
             contentContainerStyle={{
               paddingHorizontal: 4,
               alignItems: 'center',
-              flexGrow: 1,
-              justifyContent: 'center',
             }}
             renderItem={({ item }) => {
               if ((item as any).isDivider) {
@@ -105,10 +105,9 @@ export function Toolbar({
                   <View
                     style={{
                       width: 1,
-                      height: 30,
+                      height: '100%',
                       backgroundColor: '#EAEAEA',
                       marginHorizontal: 4,
-                      alignSelf: 'center',
                     }}
                   />
                 );
