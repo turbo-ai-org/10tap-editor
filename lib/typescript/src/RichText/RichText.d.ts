@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { type WebViewProps } from 'react-native-webview';
 import type { EditorBridge } from '../types';
 interface RichTextProps extends WebViewProps {

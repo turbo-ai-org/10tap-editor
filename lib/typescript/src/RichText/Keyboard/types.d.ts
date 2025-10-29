@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import type { CustomKeyboardExtension } from './CustomKeyboardExtension';
 export interface CustomKeyboardProps {
     rootRef: React.RefObject<any>;

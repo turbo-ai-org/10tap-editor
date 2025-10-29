@@ -17,7 +17,7 @@ export declare const TenTapStartKit: (import("./base").default<{
     focus: (pos: number | boolean | "start" | "end" | "all" | null) => void;
     blur: () => void;
     injectJS: (js: string) => void;
-    injectCSS: (css: string, tag?: string | undefined) => void;
+    injectCSS: (css: string, tag?: string) => void;
     setEditable: (editable: boolean) => void;
     theme: import("..").EditorTheme;
 }, "theme" | "injectCSS">, import("./core").CoreMessages> | import("./base").default<any, any, any> | import("./base").default<{
@@ -26,7 +26,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleBold: () => void;
 }, {
-    type: import("./bold").BoldEditorActionType;
+    type: import("./bold").BoldEditorActionType.ToggleBold;
     payload?: undefined;
 }> | import("./base").default<{
     isCodeActive: boolean;
@@ -34,7 +34,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleCode: () => void;
 }, {
-    type: import("./code").CodeEditorActionType;
+    type: import("./code").CodeEditorActionType.ToggleCode;
     payload?: undefined;
 }> | import("./base").default<{
     isItalicActive: boolean;
@@ -42,7 +42,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleItalic: () => void;
 }, {
-    type: import("./italic").ItalicEditorActionType;
+    type: import("./italic").ItalicEditorActionType.ToggleItalic;
     payload?: undefined;
 }> | import("./base").default<{
     canUndo: boolean;
@@ -51,7 +51,7 @@ export declare const TenTapStartKit: (import("./base").default<{
     undo: () => void;
     redo: () => void;
 }, {
-    type: import("./history").HistoryEditorActionType;
+    type: import("./history").HistoryEditorActionType.Undo | import("./history").HistoryEditorActionType.Redo;
     payload?: undefined;
 }> | import("./base").default<{
     isStrikeActive: boolean;
@@ -59,7 +59,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleStrike: () => void;
 }, {
-    type: import("./strike").StrikeEditorActionType;
+    type: import("./strike").StrikeEditorActionType.ToggleStrike;
     payload?: undefined;
 }> | import("./base").default<{
     isOrderedListActive: boolean;
@@ -67,7 +67,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleOrderedList: () => void;
 }, {
-    type: import("./orderedList").OrderedListEditorActionType;
+    type: import("./orderedList").OrderedListEditorActionType.ToggleOrderedList;
     payload?: undefined;
 }> | import("./base").default<{
     headingLevel: number | undefined;
@@ -75,7 +75,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleHeading: (level: import("@tiptap/extension-heading").Level) => void;
 }, {
-    type: import("./heading").HeadingEditorActionType;
+    type: import("./heading").HeadingEditorActionType.ToggleHeading;
     payload: import("@tiptap/extension-heading").Level;
 }> | import("./base").default<{
     canLift: boolean;
@@ -89,7 +89,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleBulletList: () => void;
 }, {
-    type: import("./bulletList").BulletListEditorActionType;
+    type: import("./bulletList").BulletListEditorActionType.ToggleBulletList;
     payload?: undefined;
 }> | import("./base").default<{
     isBlockquoteActive: boolean;
@@ -97,7 +97,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleBlockquote: () => void;
 }, {
-    type: import("./blockquote").BlockquoteEditorActionType;
+    type: import("./blockquote").BlockquoteEditorActionType.ToggleBlockquote;
     payload?: undefined;
 }> | import("./base").default<{
     isUnderlineActive: boolean;
@@ -105,7 +105,7 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     toggleUnderline: () => void;
 }, {
-    type: import("./underline").UnderlineEditorActionType;
+    type: import("./underline").UnderlineEditorActionType.ToggleUnderline;
     payload?: undefined;
 }> | import("./base").default<{
     isTaskListActive: boolean;
@@ -132,8 +132,8 @@ export declare const TenTapStartKit: (import("./base").default<{
 }, {
     setLink: (link: string | null) => void;
 }, {
-    type: import("./link").LinkEditorActionType;
-    payload: string | null;
+    type: import("./link").LinkEditorActionType.SetLink;
+    payload: null | string;
 }> | import("./base").default<{
     activeColor: string | undefined;
 }, {
@@ -163,14 +163,14 @@ export declare const TenTapStartKit: (import("./base").default<{
 }> | import("./base").default<{}, {
     setImage: (src: string) => void;
 }, {
-    type: import("./image").ImageEditorActionType;
+    type: import("./image").ImageEditorActionType.SetImage;
     payload: string;
 }> | import("./base").default<{}, {
     setPlaceholder: (newPlaceholder: string) => void;
 }, import("./placeholder").PlaceholderMessage> | import("./base").default<{}, {
     setHardBreak: () => void;
 }, {
-    type: import("./br").HardBreakEditorActionType;
+    type: import("./br").HardBreakEditorActionType.setHardBreak;
     payload?: undefined;
 }>)[];
 //# sourceMappingURL=StarterKit.d.ts.map

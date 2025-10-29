@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import type { EditorTheme } from '../../types';
 interface EditLinkBarProps {
     theme: EditorTheme;

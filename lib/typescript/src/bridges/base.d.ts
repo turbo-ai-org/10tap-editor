@@ -23,7 +23,7 @@ declare class BridgeExtension<T = any, E = any, M = any> {
     configureExtension(config: any): BridgeExtension<T, E, M>;
     configureCSS(css: string): BridgeExtension<T, E, M>;
     extendExtension(config: any): BridgeExtension<T, E, M>;
-    configureTiptapExtensionsOnRunTime(config: any, extendConfig: any): (AnyExtension | undefined)[];
+    configureTiptapExtensionsOnRunTime(config: any, extendConfig: any): AnyExtension[];
 }
 export default BridgeExtension;
 //# sourceMappingURL=base.d.ts.map

@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { type ToolbarItem } from './actions';
 import type { EditorBridge } from '../../types';
 interface ToolbarProps {
