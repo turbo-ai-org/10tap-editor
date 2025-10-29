@@ -17,7 +17,11 @@
       "Bash(git branch:*)",
       "Read(//Users/griffinhuth/Documents/Work/react-native-mobile-app/node_modules/@10play/**)",
       "Bash(npm pack:*)",
-      "Bash(npm view:*)"
+      "Bash(npm view:*)",
+      "Bash(convert:*)",
+      "Bash(npm install:*)",
+      "Bash(node convert-svg.js:*)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []
