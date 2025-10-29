@@ -1,4 +1,11 @@
-import { FlatList, StyleSheet, Platform, View } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Platform,
+  View,
+  Appearance,
+  PlatformColor,
+} from 'react-native';
 import { useBridgeState } from '../useBridgeState';
 import React from 'react';
 import {
@@ -34,6 +41,8 @@ export function Toolbar({
   const [toolbarContext, setToolbarContext] = React.useState<ToolbarContext>(
     ToolbarContext.Main
   );
+  const fallback =
+    Appearance.getColorScheme() === 'dark' ? '#1C1C1E' : '#F2F2F7';
 
   const hideToolbar =
     hidden === undefined ? !isKeyboardUp || !editorState.isFocused : hidden;
@@ -69,20 +78,22 @@ export function Toolbar({
       return (
         <BlurView
           type="liquidGlass"
-          glassType="clear"
-          glassOpacity={1.0}
           blurType="systemChromeMaterial"
-          blurAmount={100}
-          reducedTransparencyFallbackColor="transparent"
+          blurAmount={24} // try 22–28 if you need to tune
+          glassType="regular" // slight tint, closer to the keyboard
+          glassOpacity={0.9} // 0.88–0.92 feels right
+          reducedTransparencyFallbackColor={fallback}
+          isInteractive={true}
           style={[
             hideToolbar ? editor.theme.toolbar.hidden : undefined,
             {
               overflow: 'hidden',
-              // borderWidth: 0.5,
-              borderColor: 'rgba(255, 255, 255, 0.2)',
               borderRadius: 14,
               borderTopWidth: 0,
               borderBottomWidth: 0,
+              // Subtle system-like hairline:
+              borderColor:
+                PlatformColor?.('separator') ?? 'rgba(60,60,67,0.29)',
             },
           ]}
         >
