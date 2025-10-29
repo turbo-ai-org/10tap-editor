@@ -43,7 +43,9 @@ export function Toolbar({
   );
   const fallback =
     Appearance.getColorScheme() === 'dark' ? '#1C1C1E' : '#F2F2F7';
-
+  const test = Appearance.getColorScheme() === 'dark'
+    ? 'rgba(255,255,255,0.06)'  // tiny lift in dark mode (like vibrancy)
+    : 'rgba(99, 126, 138, 0.39)';
   const hideToolbar =
     hidden === undefined ? !isKeyboardUp || !editorState.isFocused : hidden;
 
@@ -77,11 +79,12 @@ export function Toolbar({
       }
       return (
         <BlurView
-          type="liquidGlass"
+          type="blur"
           blurType="systemChromeMaterial"
-          blurAmount={24} // try 22–28 if you need to tune
-          glassType="regular" // slight tint, closer to the keyboard
-          glassOpacity={0.9} // 0.88–0.92 feels right
+          blurAmount={22} // try 22–28 if you need to tune
+          glassTintColor={test}
+          glassType="clear" // slight tint, closer to the keyboard
+          glassOpacity={0.88} // 0.88–0.92 feels right
           reducedTransparencyFallbackColor={fallback}
           isInteractive={true}
           style={[
@@ -92,6 +95,7 @@ export function Toolbar({
               borderTopWidth: 0,
               borderBottomWidth: 0,
               // Subtle system-like hairline:
+              backgroundColor: test,
               borderColor:
                 PlatformColor?.('separator') ?? 'rgba(60,60,67,0.29)',
             },
