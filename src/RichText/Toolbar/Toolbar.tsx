@@ -1,11 +1,4 @@
-import {
-  FlatList,
-  StyleSheet,
-  Platform,
-  View,
-  Appearance,
-  PlatformColor,
-} from 'react-native';
+import { FlatList, StyleSheet, Platform, View } from 'react-native';
 import { useBridgeState } from '../useBridgeState';
 import React from 'react';
 import {
@@ -19,7 +12,6 @@ import { useKeyboard } from '../../utils';
 import type { EditorBridge } from '../../types';
 import { ToolbarItemComp } from './ToolbarItemComp';
 import { WebToolbar } from './WebToolbar';
-import { BlurView } from '@sbaiahmed1/react-native-blur';
 
 interface ToolbarProps {
   editor: EditorBridge;
@@ -41,12 +33,7 @@ export function Toolbar({
   const [toolbarContext, setToolbarContext] = React.useState<ToolbarContext>(
     ToolbarContext.Main
   );
-  const fallback =
-    Appearance.getColorScheme() === 'dark' ? '#1C1C1E' : '#F2F2F7';
-  const test =
-    Appearance.getColorScheme() === 'dark'
-      ? '#16161a95' // tiny lift in dark mode (like vibrancy)
-      : '#E0E1E4';
+
   const hideToolbar =
     hidden === undefined ? !isKeyboardUp || !editorState.isFocused : hidden;
 
@@ -79,67 +66,39 @@ export function Toolbar({
         );
       }
       return (
-        <BlurView
-          type="blur"
-          blurType="systemChromeMaterial"
-          blurAmount={22} // try 22–28 if you need to tune
-          glassTintColor={test}
-          glassType="clear" // slight tint, closer to the keyboard
-          glassOpacity={0.88} // 0.88–0.92 feels right
-          reducedTransparencyFallbackColor={fallback}
-          isInteractive={true}
+        <FlatList
+          data={
+            toolbarContext === ToolbarContext.Main
+              ? filteredItems
+              : HEADING_ITEMS
+          }
           style={[
+            editor.theme.toolbar.toolbarBody,
             hideToolbar ? editor.theme.toolbar.hidden : undefined,
-            {
-              overflow: 'hidden',
-              borderRadius: 14,
-              borderTopWidth: 0,
-              borderBottomWidth: 0,
-              // Subtle system-like hairline:
-              backgroundColor: test,
-              borderColor:
-                PlatformColor?.('separator') ?? 'rgba(60,60,67,0.29)',
-            },
           ]}
-        >
-          <FlatList
-            data={
-              toolbarContext === ToolbarContext.Main
-                ? filteredItems
-                : HEADING_ITEMS
+          contentContainerStyle={{
+            paddingHorizontal: 4,
+            alignItems: 'center',
+            minHeight: '100%',
+          }}
+          renderItem={({ item }) => {
+            if ((item as any).isDivider) {
+              return (
+                <View
+                  style={{
+                    width: 1,
+                    height: 30,
+                    backgroundColor: '#EAEAEA',
+                    marginHorizontal: 4,
+                    alignSelf: 'center',
+                  }}
+                />
+              );
             }
-            style={{
-              backgroundColor: 'transparent',
-              flex: 1,
-              height: '100%',
-            }}
-            contentContainerStyle={{
-              paddingHorizontal: 3,
-              alignItems: 'center',
-              minHeight: '100%',
-            }}
-            renderItem={({ item }) => {
-              if ((item as any).isDivider) {
-                return (
-                  <View
-                    style={{
-                      width: 1,
-                      height: 30,
-                      backgroundColor:
-                        Appearance.getColorScheme() === 'dark'
-                          ? 'rgba(255, 255, 255, 0.2)'
-                          : 'rgba(0, 0, 0, 0.15)',
-                      marginHorizontal: 3,
-                      alignSelf: 'center',
-                    }}
-                  />
-                );
-              }
-              return <ToolbarItemComp {...item} args={args} editor={editor} />;
-            }}
-            horizontal
-          />
-        </BlurView>
+            return <ToolbarItemComp {...item} args={args} editor={editor} />;
+          }}
+          horizontal
+        />
       );
     case ToolbarContext.Link:
       return (
