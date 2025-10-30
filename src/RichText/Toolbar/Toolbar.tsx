@@ -114,7 +114,7 @@ export function Toolbar({
               height: '100%',
             }}
             contentContainerStyle={{
-              paddingHorizontal: 4,
+              paddingHorizontal: 3,
               alignItems: 'center',
               minHeight: '100%',
             }}
@@ -124,12 +124,12 @@ export function Toolbar({
                   <View
                     style={{
                       width: 1,
-                      height: '60%',
+                      height: 30,
                       backgroundColor:
                         Appearance.getColorScheme() === 'dark'
-                          ? 'rgba(255, 255, 255, 0.3)'
-                          : 'rgba(60, 60, 67, 0.36)',
-                      marginHorizontal: 8,
+                          ? 'rgba(255, 255, 255, 0.2)'
+                          : 'rgba(0, 0, 0, 0.15)',
+                      marginHorizontal: 3,
                       alignSelf: 'center',
                     }}
                   />
