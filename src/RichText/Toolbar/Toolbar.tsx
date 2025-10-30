@@ -43,9 +43,10 @@ export function Toolbar({
   );
   const fallback =
     Appearance.getColorScheme() === 'dark' ? '#1C1C1E' : '#F2F2F7';
-  const test = Appearance.getColorScheme() === 'dark'
-    ? 'rgba(255,255,255,0.06)'  // tiny lift in dark mode (like vibrancy)
-    : 'rgba(99, 126, 138, 0.39)';
+  const test =
+    Appearance.getColorScheme() === 'dark'
+      ? '#16161a95' // tiny lift in dark mode (like vibrancy)
+      : '#E0E1E4';
   const hideToolbar =
     hidden === undefined ? !isKeyboardUp || !editorState.isFocused : hidden;
 
@@ -123,9 +124,13 @@ export function Toolbar({
                   <View
                     style={{
                       width: 1,
-                      height: '100%',
-                      backgroundColor: '#EAEAEA',
-                      marginHorizontal: 4,
+                      height: '60%',
+                      backgroundColor:
+                        Appearance.getColorScheme() === 'dark'
+                          ? 'rgba(255, 255, 255, 0.3)'
+                          : 'rgba(60, 60, 67, 0.36)',
+                      marginHorizontal: 8,
+                      alignSelf: 'center',
                     }}
                   />
                 );
