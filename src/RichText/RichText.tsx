@@ -21,7 +21,6 @@ import type { EditorBridge } from '../types';
 import { getInjectedJS, getInjectedJSBeforeContentLoad } from './utils';
 import { isFabric } from '../utils/misc';
 import { CoreEditorActionType } from '../bridges/core';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface RichTextProps extends WebViewProps {
   editor: EditorBridge;
@@ -55,7 +54,6 @@ export const RichText = ({
   const [key, setKey] = useState('webview');
   const [loaded, setLoaded] = useState(isFabric());
   const { keyboardHeight, isKeyboardUp } = useKeyboard();
-  const insets = useSafeAreaInsets();
 
   const source: WebViewProps['source'] = editor.DEV
     ? { uri: editor.DEV_SERVER_URL || DEV_SERVER_URL }
@@ -101,7 +99,7 @@ export const RichText = ({
       editor?.options?.theme?.toolbar?.toolbarBody?.height ?? TOOLBAR_HEIGHT;
 
     const extra = 8; // small breathing room so caret doesn’t hug toolbar
-    const basePad = themedToolbarHeight + insets.bottom + extra;
+    const basePad = themedToolbarHeight + 8 + extra;
 
     // Ensure we always return a cleanup (fixes TS7030)
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -129,13 +127,7 @@ export const RichText = ({
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [
-    editor,
-    editor.avoidIosKeyboard,
-    insets.bottom,
-    isKeyboardUp,
-    keyboardHeight,
-  ]);
+  }, [editor, editor.avoidIosKeyboard, isKeyboardUp, keyboardHeight]);
 
   const injectedJavaScript = useMemo(
     () => getInjectedJS(editor.bridgeExtensions || []),
