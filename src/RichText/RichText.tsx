@@ -21,13 +21,12 @@ import type { EditorBridge } from '../types';
 import { getInjectedJS, getInjectedJSBeforeContentLoad } from './utils';
 import { isFabric } from '../utils/misc';
 import { CoreEditorActionType } from '../bridges/core';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface RichTextProps extends WebViewProps {
   editor: EditorBridge;
 
-  /** Makes it so that the onMessage method provided by Tentap does not fire if you have your own custom onMessage method.
-   * Introduced for backwards compatibility with previous versions of Tentap that had this behaviour by default.
-   * */
+  /** If true, your custom onMessage runs exclusively and Tentap’s handler won’t. */
   exclusivelyUseCustomOnMessage?: boolean;
 }
 
@@ -44,9 +43,7 @@ const styles = StyleSheet.create({
 });
 
 const DEV_SERVER_URL = 'http://localhost:3000';
-
-// TODO: make it a prop
-const TOOLBAR_HEIGHT = 44;
+const TOOLBAR_HEIGHT = 42; // keep in sync with your app toolbar
 
 export const RichText = ({
   editor,
@@ -58,6 +55,8 @@ export const RichText = ({
   const [key, setKey] = useState('webview');
   const [loaded, setLoaded] = useState(isFabric());
   const { keyboardHeight, isKeyboardUp } = useKeyboard();
+  const insets = useSafeAreaInsets();
+
   const source: WebViewProps['source'] = editor.DEV
     ? { uri: editor.DEV_SERVER_URL || DEV_SERVER_URL }
     : {
@@ -70,9 +69,7 @@ export const RichText = ({
     if (exclusivelyUseCustomOnMessage && onMessage) return;
 
     const { data } = event.nativeEvent;
-    // on expo-web we sometimes get react-dev messages that come in as objects - so we ignore these
-    if (typeof data !== 'string') return;
-    // Parse the message sent from the editor
+    if (typeof data !== 'string') return; // devtools messages on web
     const { type, payload } = JSON.parse(data) as EditorMessage;
     if (type === CoreEditorActionType.DocumentHeight) {
       setEditorHeight(payload);
@@ -82,68 +79,81 @@ export const RichText = ({
     });
   };
 
+  /**
+   * Keep WebView document padding and internal scroll thresholds
+   * synced to keyboard + toolbar + safe-area.
+   */
   useEffect(() => {
     const setDocBottomPadding = (height: number) => {
-      if (editor.webviewRef.current) {
-        editor.webviewRef.current.injectJavaScript(`
-          doc = document.querySelector('.ProseMirror');
-          if(doc) doc.style.paddingBottom = '${height}px';
-        `);
-      }
+      if (!editor.webviewRef.current) return;
+      editor.webviewRef.current.injectJavaScript(`
+        (function () {
+          var doc = document.querySelector('.ProseMirror');
+          if (doc) { doc.style.paddingBottom = '${height}px'; }
+        })();
+        true;
+      `);
     };
-    if (editor.webviewRef.current && Platform.OS === 'android') {
-      // In case the keyboard is up we need to add padding to the bottom of the document
-      const paddingThreshold =
-        editor.avoidIosKeyboard && keyboardHeight && isKeyboardUp // avoidIosKeyboard should change to avoidKeyboard because used in android too (v1.0.0)
-          ? TOOLBAR_HEIGHT
-          : 0;
-      setTimeout(() => {
-        setDocBottomPadding(paddingThreshold);
-        editor.updateScrollThresholdAndMargin(paddingThreshold);
-      }, 200);
-    }
-    // On iOS we want to control the scroll and not use the scrollview that comes with react-native-webview
-    // That's way we can get better exp on scroll and scroll to element when we need to
-    if (
-      editor.avoidIosKeyboard &&
-      editor.webviewRef.current &&
-      Platform.OS === 'ios'
-    ) {
-      if (keyboardHeight) {
-        setDocBottomPadding(keyboardHeight + 10);
-        editor.updateScrollThresholdAndMargin(keyboardHeight + 10);
+
+    // Prefer theme height if your fork passes it down
+    const themedToolbarHeight =
+      // @ts-ignore – optional chain if your fork doesn’t define options
+      editor?.options?.theme?.toolbar?.toolbarBody?.height ?? TOOLBAR_HEIGHT;
+
+    const extra = 8; // small breathing room so caret doesn’t hug toolbar
+    const basePad = themedToolbarHeight + insets.bottom + extra;
+
+    // Ensure we always return a cleanup (fixes TS7030)
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    if (Platform.OS === 'ios' && editor.avoidIosKeyboard) {
+      const pad = isKeyboardUp ? keyboardHeight + basePad : 0;
+      setDocBottomPadding(pad);
+      editor.updateScrollThresholdAndMargin(pad);
+    } else if (Platform.OS === 'android') {
+      if (editor.avoidIosKeyboard) {
+        // Manual handling (e.g., adjustNothing) -> we drive padding entirely
+        const pad = isKeyboardUp ? keyboardHeight + basePad : 0;
+        setDocBottomPadding(pad);
+        editor.updateScrollThresholdAndMargin(pad);
       } else {
-        setDocBottomPadding(0);
-        editor.updateScrollThresholdAndMargin(0);
+        // Relying on adjustResize -> still reserve toolbar so caret doesn’t hide
+        const pad = isKeyboardUp ? themedToolbarHeight : 0;
+        timeoutId = setTimeout(() => {
+          setDocBottomPadding(pad);
+          editor.updateScrollThresholdAndMargin(pad);
+        }, 120); // let resize settle
       }
     }
-  }, [editor.avoidIosKeyboard, editor, keyboardHeight, isKeyboardUp]);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [
+    editor,
+    editor.avoidIosKeyboard,
+    insets.bottom,
+    isKeyboardUp,
+    keyboardHeight,
+  ]);
 
   const injectedJavaScript = useMemo(
     () => getInjectedJS(editor.bridgeExtensions || []),
     [editor.bridgeExtensions]
   );
 
-  // Create pan responder for swipe to dismiss keyboard
+  // Swipe down anywhere to dismiss keyboard (works inside WebView)
   const panResponder = useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponder: (_evt, gestureState) => {
-        // Only respond if swiping down
-        return (
-          gestureState.dy > 10 &&
-          Math.abs(gestureState.dx) < Math.abs(gestureState.dy)
-        );
-      },
-      onPanResponderRelease: (_evt, gestureState) => {
-        // If swiped down more than 50 pixels, dismiss keyboard
-        if (gestureState.dy > 50) {
+      onMoveShouldSetPanResponder: (_evt, gesture) =>
+        gesture.dy > 10 && Math.abs(gesture.dx) < Math.abs(gesture.dy),
+      onPanResponderRelease: (_evt, gesture) => {
+        if (gesture.dy > 50) {
           Keyboard.dismiss();
-          if (editor.webviewRef.current) {
-            editor.webviewRef.current.injectJavaScript(`
-              document.activeElement?.blur();
-              true;
-            `);
-          }
+          editor.webviewRef.current?.injectJavaScript(`
+            (function(){ document.activeElement?.blur(); })();
+            true;
+          `);
         }
       },
     })
@@ -177,11 +187,9 @@ export const RichText = ({
         webviewDebuggingEnabled={__DEV__}
         keyboardDisplayRequiresUserAction={false}
         {...props}
-        // Propagated Props
         onLoad={(e) => {
           setLoaded(true);
-          // This is a workaround for iOS to make sure the webview is loaded
-          // See https://github.com/react-native-webview/react-native-webview/issues/3578
+          // iOS WebView workaround
           if (Platform.OS === 'ios' && key === 'webview') {
             setKey('webview_reloaded');
           }
