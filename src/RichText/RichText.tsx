@@ -1,26 +1,26 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Keyboard,
+  PanResponder,
   Platform,
   StyleSheet,
   TextInput,
-  Keyboard,
   View,
-  PanResponder,
 } from 'react-native';
 import {
   WebView,
-  type WebViewProps,
   type WebViewMessageEvent,
+  type WebViewProps,
 } from 'react-native-webview';
 
 import { editorHtml } from '../simpleWebEditor/build/editorHtml';
 
-import { type EditorMessage } from '../types/Messaging';
-import { useKeyboard } from '../utils';
 import type { EditorBridge } from '../types';
+import type { EditorMessage } from '../types/Messaging';
 import { getInjectedJS, getInjectedJSBeforeContentLoad } from './utils';
-import { isFabric } from '../utils/misc';
 import { CoreEditorActionType } from '../bridges/core';
+import { isFabric } from '../utils/misc';
+import { useKeyboard } from '../utils';
 
 interface RichTextProps extends WebViewProps {
   editor: EditorBridge;
@@ -52,10 +52,13 @@ export const RichText = ({
   const [editorHeight, setEditorHeight] = useState(0);
   const [key, setKey] = useState('webview');
   const [loaded, setLoaded] = useState(isFabric());
+
   const { keyboardHeight, isKeyboardUp } = useKeyboard();
   const bottomInset: number = (editor as any)?.safeAreaBottom ?? 0;
+
   const lastPadRef = useRef(0);
   const rafRef = useRef<number | null>(null);
+  const prevUpRef = useRef(false);
 
   const source: WebViewProps['source'] = editor.DEV
     ? { uri: editor.DEV_SERVER_URL || DEV_SERVER_URL }
@@ -71,99 +74,110 @@ export const RichText = ({
     const { data } = event.nativeEvent;
     if (typeof data !== 'string') return; // devtools messages on web
     const { type, payload } = JSON.parse(data) as EditorMessage;
+
     if (type === CoreEditorActionType.DocumentHeight) {
       setEditorHeight(payload);
     }
+
     editor.bridgeExtensions?.forEach((e) => {
       e.onEditorMessage && e.onEditorMessage({ type, payload }, editor);
     });
   };
 
-  /**
-   * Inject one-time helper into the web runtime that updates the *scroll container*,
-   * not only `.ProseMirror`. We keep it idempotent and safe to re-run.
-   */
-  const ensureInsetHelper = () => {
+  /** Inject once: helpers for bottom inset + caret scroll */
+  const ensureWebHelpers = () => {
     editor.webviewRef.current?.injectJavaScript(`
-    (function () {
-      if (window.__rn_setBottomInset) return;
-      window.__rn_setBottomInset = function(pad){
-        try{
-          var target = document.scrollingElement || document.documentElement || document.body;
-          if (!target) return true;
+      (function(){
+        // bottom inset helper
+        if (!window.__rn_setBottomInset) {
+          window.__rn_setBottomInset = function(pad){
+            try{
+              var target = document.scrollingElement || document.documentElement || document.body;
+              if (!target) return true;
 
-          // Only update when pad actually changes
-          var prev = target.__rn_pad || 0;
-          if (prev === pad) return true;
-          target.__rn_pad = pad;
+              var prev = target.__rn_pad || 0;
+              if (prev === pad) return true;
+              target.__rn_pad = pad;
 
-          // Reserve space; make native scroll math respect it
-          target.style.paddingBottom = pad + 'px';
-          target.style.scrollPaddingBottom = pad + 'px';
+              target.style.paddingBottom = pad + 'px';
+              target.style.scrollPaddingBottom = pad + 'px';
 
-          // Also reflect on the editor element (purely visual); avoid extra layout tricks
-          var pm = document.querySelector('.ProseMirror');
-          if (pm) pm.style.paddingBottom = Math.max(0, pad - 2) + 'px';
-        } catch (e) {}
-        return true;
-      };
-    })();
-    true;
-  `);
+              var pm = document.querySelector('.ProseMirror');
+              if (pm) pm.style.paddingBottom = Math.max(0, pad - 2) + 'px';
+            } catch(e) {}
+            return true;
+          };
+        }
+
+        // caret scroll helper
+        if (!window.__rn_scrollToCaret) {
+          window.__rn_scrollToCaret = function(){
+            try{
+              if (window.editor?.chain) {
+                window.editor.chain().focus().scrollIntoView().run();
+              } else if (window.editor?.view) {
+                var v = window.editor.view;
+                v.dispatch(v.state.tr.scrollIntoView());
+                v.focus();
+              }
+              requestAnimationFrame(function(){ window.scrollBy(0, 12); });
+            } catch(e) {}
+            return true;
+          }
+        }
+      })();
+      true;
+    `);
   };
 
-  /**
-   * Keep WebView bottom padding + TenTap thresholds synced to keyboard + toolbar + safe-area.
-   */
+  /** Keep page bottom padding + TenTap thresholds in sync */
   useEffect(() => {
-    ensureInsetHelper();
+    ensureWebHelpers();
 
     const themedToolbarHeight =
-      // @ts-ignore – optional chain if your fork doesn’t define options
+      // @ts-ignore – optional chain if fork doesn’t define options
       editor?.options?.theme?.toolbar?.toolbarBody?.height ?? TOOLBAR_HEIGHT;
 
     const extra = 8;
-    const basePad = Math.max(
-      0,
-      Math.round(themedToolbarHeight + bottomInset + extra)
-    );
+    const basePad = Math.max(0, Math.round(themedToolbarHeight + bottomInset + extra));
 
-    // What we actually want painted at the bottom of the page
+    // What we want painted at the page bottom
     const desiredPad = Math.max(
       0,
       Math.round(
         Platform.OS === 'ios'
-          ? editor.avoidIosKeyboard
-            ? isKeyboardUp
-              ? keyboardHeight + basePad
-              : 0
-            : isKeyboardUp
-            ? basePad
-            : 0
-          : editor.avoidIosKeyboard
-          ? isKeyboardUp
-            ? keyboardHeight + basePad
-            : 0
-          : isKeyboardUp
-          ? themedToolbarHeight
-          : 0
+          ? (editor.avoidIosKeyboard
+              ? (isKeyboardUp ? keyboardHeight + basePad : 0)
+              : (isKeyboardUp ? basePad : 0))
+          : (editor.avoidIosKeyboard
+              ? (isKeyboardUp ? keyboardHeight + basePad : 0)
+              : (isKeyboardUp ? themedToolbarHeight : 0))
       )
     );
 
-    // Ignore tiny jitter (<2px)
+    // Ignore tiny jitter
     if (Math.abs(desiredPad - lastPadRef.current) < 2) return;
     lastPadRef.current = desiredPad;
 
-    // Batch into one frame
+    // Batch updates into a single frame
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(() => {
       editor.webviewRef.current?.injectJavaScript(
         `window.__rn_setBottomInset(${desiredPad}); true;`
       );
-
-      // IMPORTANT: keep threshold stable (toolbar + safe area), not keyboard
+      // Important: TenTap threshold stays stable (toolbar + safe area)
       editor.updateScrollThresholdAndMargin(basePad);
     });
+
+    // Scroll once when keyboard opens (down -> up)
+    const opened = isKeyboardUp && !prevUpRef.current;
+    prevUpRef.current = isKeyboardUp;
+    if (opened) {
+      editor.webviewRef.current?.injectJavaScript(`
+        setTimeout(function(){ window.__rn_scrollToCaret && window.__rn_scrollToCaret(); }, 80);
+        true;
+      `);
+    }
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -199,12 +213,11 @@ export const RichText = ({
       {editor.autofocus && Platform.OS === 'android' && (
         <TextInput autoFocus style={styles.hiddenInput} />
       )}
+
       <WebView
-        scrollEnabled={props.scrollEnabled ?? true}
-        contentInsetAdjustmentBehavior={
-          Platform.OS === 'ios' ? 'never' : undefined
-        }
         key={key}
+        ref={editor.webviewRef}
+        source={source}
         style={[
           RichTextStyles.fullScreen,
           { display: loaded ? 'flex' : 'none' },
@@ -214,25 +227,21 @@ export const RichText = ({
           editor.theme.webviewContainer,
           { height: editor.dynamicHeight ? editorHeight : undefined },
         ]}
-        source={source}
-        injectedJavaScript={injectedJavaScript}
-        injectedJavaScriptBeforeContentLoaded={getInjectedJSBeforeContentLoad(
-          editor
-        )}
-        hideKeyboardAccessoryView={true}
-        onMessage={onWebviewMessage}
-        ref={editor.webviewRef}
-        webviewDebuggingEnabled={__DEV__}
+        // Prevent iOS from adding its own insets that fight our layout
+        contentInsetAdjustmentBehavior={Platform.OS === 'ios' ? 'never' : undefined}
+        hideKeyboardAccessoryView
         keyboardDisplayRequiresUserAction={false}
-        {...props}
+        webviewDebuggingEnabled={__DEV__}
+        scrollEnabled={props.scrollEnabled ?? true}
+        injectedJavaScript={injectedJavaScript}
+        injectedJavaScriptBeforeContentLoaded={getInjectedJSBeforeContentLoad(editor)}
+        onMessage={onWebviewMessage}
         onLoad={(e) => {
           setLoaded(true);
-          // iOS workaround for a stale render path in RNWV
-          if (Platform.OS === 'ios' && key === 'webview') {
-            setKey('webview_reloaded');
-          }
+          if (Platform.OS === 'ios' && key === 'webview') setKey('webview_reloaded');
           props.onLoad && props.onLoad(e);
         }}
+        {...props}
       />
     </View>
   );
