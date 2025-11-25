@@ -150,7 +150,7 @@ export const RichText = ({
   ).current;
 
   return (
-    <View style={RichTextStyles.fullScreen} {...panResponder.panHandlers}>
+    <View style={RichTextStyles.fullScreen} {...(Platform.OS === 'ios' ? panResponder.panHandlers : {})}>
       {editor.autofocus && Platform.OS === 'android' && (
         <TextInput autoFocus style={styles.hiddenInput} />
       )}
