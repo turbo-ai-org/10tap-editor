@@ -48,6 +48,16 @@ const DEV_SERVER_URL = 'http://localhost:3000';
 // TODO: make it a prop
 const TOOLBAR_HEIGHT = 44;
 
+// Cast to a stable component type so the JSX below type-checks even when a
+// consumer's dependency tree contains more than one copy of `@types/react`.
+// With duplicate React typings the class component's props resolve to `never`,
+// which breaks the build's type-definition target (`bob build` -> tsc).
+const WebViewComponent = WebView as unknown as React.ComponentClass<WebViewProps>;
+
+// Derived from WebViewProps so it tracks whatever react-native-webview version the
+// consumer installs (the event type itself isn't re-exported from the package root).
+type WebViewLoadEvent = Parameters<NonNullable<WebViewProps['onLoad']>>[0];
+
 export const RichText = ({
   editor,
   onMessage,
@@ -154,7 +164,7 @@ export const RichText = ({
       {editor.autofocus && Platform.OS === 'android' && (
         <TextInput autoFocus style={styles.hiddenInput} />
       )}
-      <WebView
+      <WebViewComponent
         scrollEnabled={false}
         key={key}
         style={[
@@ -178,7 +188,7 @@ export const RichText = ({
         keyboardDisplayRequiresUserAction={false}
         {...props}
         // Propagated Props
-        onLoad={(e) => {
+        onLoad={(e: WebViewLoadEvent) => {
           setLoaded(true);
           // This is a workaround for iOS to make sure the webview is loaded
           // See https://github.com/react-native-webview/react-native-webview/issues/3578
