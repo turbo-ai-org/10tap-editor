@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Keyboard } from 'react-native';
 import { Images } from '../../assets';
 import { EditorActionType } from '../../types/Actions';
 import type { EditorBridge } from '../../types';
@@ -33,9 +33,33 @@ export interface ToolbarItem {
   active: ({ editor, editorState }: ArgsToolbarCB) => boolean;
   disabled: ({ editor, editorState }: ArgsToolbarCB) => boolean;
   image: ({ editor, editorState }: ArgsToolbarCB) => any;
+  customWidth?: number;
+  customIconWidth?: number;
+  customIconHeight?: number;
 }
 
 export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
+  {
+    onPress:
+      ({ editor }) =>
+      () => {
+        Keyboard.dismiss();
+        // Also blur the editor
+        editor.webviewRef?.current?.injectJavaScript(`
+          document.activeElement?.blur();
+          true;
+        `);
+      },
+    active: () => false,
+    disabled: () => false,
+    image: () => Images.keyboard,
+    customWidth: 44,
+    customIconWidth: 20,
+    customIconHeight: 16,
+  },
+  {
+    isDivider: true,
+  } as any,
   {
     onPress:
       ({ editor }) =>
@@ -56,32 +80,12 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
   },
   {
     onPress:
-      ({ setToolbarContext, editorState, editor }) =>
-      () => {
-        if (Platform.OS === 'android') {
-          // On android focus outside the editor will lose the tiptap selection so we wait for the next tick and set it with the last selection value we had
-          setTimeout(() => {
-            editor.setSelection(
-              editorState.selection.from,
-              editorState.selection.to
-            );
-          });
-        }
-        setToolbarContext(ToolbarContext.Link);
-      },
-    active: ({ editorState }) => editorState.isLinkActive,
-    disabled: ({ editorState }) =>
-      !editorState.isLinkActive && !editorState.canSetLink,
-    image: () => Images.link,
-  },
-  {
-    onPress:
       ({ editor }) =>
       () =>
-        editor.toggleTaskList(),
-    active: ({ editorState }) => editorState.isTaskListActive,
-    disabled: ({ editorState }) => !editorState.canToggleTaskList,
-    image: () => Images.checkList,
+        editor.toggleUnderline(),
+    active: ({ editorState }) => editorState.isUnderlineActive,
+    disabled: ({ editorState }) => !editorState.canToggleUnderline,
+    image: () => Images.underline,
   },
   {
     onPress:
@@ -93,41 +97,8 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
     image: () => Images.Aa,
   },
   {
-    onPress:
-      ({ editor }) =>
-      () =>
-        editor.toggleCode(),
-    active: ({ editorState }) => editorState.isCodeActive,
-    disabled: ({ editorState }) => !editorState.canToggleCode,
-    image: () => Images.code,
-  },
-  {
-    onPress:
-      ({ editor }) =>
-      () =>
-        editor.toggleUnderline(),
-    active: ({ editorState }) => editorState.isUnderlineActive,
-    disabled: ({ editorState }) => !editorState.canToggleUnderline,
-    image: () => Images.underline,
-  },
-  {
-    onPress:
-      ({ editor }) =>
-      () =>
-        editor.toggleStrike(),
-    active: ({ editorState }) => editorState.isStrikeActive,
-    disabled: ({ editorState }) => !editorState.canToggleStrike,
-    image: () => Images.strikethrough,
-  },
-  {
-    onPress:
-      ({ editor }) =>
-      () =>
-        editor.toggleBlockquote(),
-    active: ({ editorState }) => editorState.isBlockquoteActive,
-    disabled: ({ editorState }) => !editorState.canToggleBlockquote,
-    image: () => Images.quote,
-  },
+    isDivider: true,
+  } as any,
   {
     onPress:
       ({ editor }) =>
@@ -147,46 +118,13 @@ export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [
     image: () => Images.bulletList,
   },
   {
-    // Regular list items (li) and task list items both use the
-    // same sink command and button just with a different parameter, so we check both states here
-    onPress:
-      ({ editor, editorState }) =>
-      () =>
-        editorState.canSink ? editor.sink() : editor.sinkTaskListItem(),
-    active: () => false,
-    disabled: ({ editorState }) =>
-      !editorState.canSink && !editorState.canSinkTaskListItem,
-    image: () => Images.indent,
-  },
-  {
-    // Regular list items (li) and task list items both use the
-    // same lift command and button just with a different parameter, so we check both states here
-    onPress:
-      ({ editor, editorState }) =>
-      () =>
-        editorState.canLift ? editor.lift() : editor.liftTaskListItem(),
-    active: () => false,
-    disabled: ({ editorState }) =>
-      !editorState.canLift && !editorState.canLiftTaskListItem,
-    image: () => Images.outdent,
-  },
-  {
     onPress:
       ({ editor }) =>
       () =>
-        editor.undo(),
-    active: () => false,
-    disabled: ({ editorState }) => !editorState.canUndo,
-    image: () => Images.undo,
-  },
-  {
-    onPress:
-      ({ editor }) =>
-      () =>
-        editor.redo(),
-    active: () => false,
-    disabled: ({ editorState }) => !editorState.canRedo,
-    image: () => Images.redo,
+        editor.toggleTaskList(),
+    active: ({ editorState }) => editorState.isTaskListActive,
+    disabled: ({ editorState }) => !editorState.canToggleTaskList,
+    image: () => Images.checkList,
   },
 ];
 

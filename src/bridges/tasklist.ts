@@ -1,5 +1,5 @@
-import TaskList from '@tiptap/extension-task-list';
-import TaskItem from '@tiptap/extension-task-item';
+// @ts-ignore - Import for TypeScript types only, not used at runtime to avoid conflicts
+import { TaskList, TaskItem } from '@tiptap/extension-list';
 import BridgeExtension from './base';
 
 type TaskListEditorState = {
@@ -45,8 +45,9 @@ export const TaskListBridge = new BridgeExtension<
   TaskListEditorInstance,
   TaskListMessage
 >({
-  tiptapExtension: TaskList,
-  tiptapExtensionDeps: [TaskItem.configure({ nested: true })],
+  tiptapExtension: undefined as any,
+  tiptapExtensionDeps: [],
+  forceName: 'taskList' as any,
   onBridgeMessage: (editor, message) => {
     if (message.type === TaskListEditorActionType.ToggleTaskList) {
       editor.chain().focus().toggleTaskList().run();

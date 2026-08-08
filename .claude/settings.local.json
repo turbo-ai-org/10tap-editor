@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn install)",
+      "Bash(yarn prepare)",
+      "Bash(yarn editor:build:*)",
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Read(//Users/griffinhuth/Documents/Work/10tap-editor/.github/**)",
+      "Bash(git ls-tree:*)",
+      "Bash(git fetch:*)",
+      "Read(//private/tmp/**)",
+      "Bash(tar:*)",
+      "Read(//tmp/package/src/**)",
+      "Bash(git branch:*)",
+      "Read(//Users/griffinhuth/Documents/Work/react-native-mobile-app/node_modules/@10play/**)",
+      "Bash(npm pack:*)",
+      "Bash(npm view:*)",
+      "Bash(convert:*)",
+      "Bash(npm install:*)",
+      "Bash(node convert-svg.js:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

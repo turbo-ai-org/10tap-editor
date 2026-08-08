@@ -83,21 +83,21 @@ export const useTenTap = (options?: useTenTapArgs) => {
 
   const editor = useEditor({
     content,
-    onCreate: () =>
+    onCreate: ({ editor }) =>
       sendMessage({
         type: CoreEditorActionType.EditorReady,
         payload: undefined,
       }),
-    onUpdate: (onUpdate) => {
-      sendStateUpdate(onUpdate.editor);
+    onUpdate: ({ editor: updateEditor }) => {
+      sendStateUpdate(updateEditor);
       sendMessage({
         type: CoreEditorActionType.ContentUpdate,
         payload: undefined,
       });
     },
-    onSelectionUpdate: (onUpdate) => sendStateUpdate(onUpdate.editor),
-    onTransaction: (onUpdate) => sendStateUpdate(onUpdate.editor),
-    editable: window.editable,
+    onSelectionUpdate: ({ editor: selectionEditor }) => sendStateUpdate(selectionEditor),
+    onTransaction: ({ editor: transactionEditor }) => sendStateUpdate(transactionEditor),
+    editable: window.editable === 'true' || (window.editable as any) === true,
     ...tiptapOptionsWithExtensions,
   });
 
@@ -106,7 +106,25 @@ export const useTenTap = (options?: useTenTapArgs) => {
     // Subscribe to editor message
     const handleEditorAction = (action: any) => {
       bridges.forEach((e) => {
-        e.onBridgeMessage && e.onBridgeMessage(editor, action, sendMessage);
+        if (e.onBridgeMessage) {
+          try {
+            e.onBridgeMessage(editor, action, sendMessage);
+          } catch (error: any) {
+            sendMessage({
+              type: 'log' as any,
+              payload: {
+                event: 'Bridge message handler error',
+                bridge: e.name,
+                action: action?.type,
+                error: {
+                  message: error?.message,
+                  stack: error?.stack,
+                  name: error?.name
+                }
+              }
+            });
+          }
+        }
       });
     };
     const handleWebviewMessage = (event: MessageEvent | Event) => {

@@ -1,5 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Platform, StyleSheet, TextInput } from 'react-native';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  TextInput,
+  Keyboard,
+  View,
+  PanResponder,
+} from 'react-native';
 import {
   WebView,
   type WebViewProps,
@@ -40,6 +47,16 @@ const DEV_SERVER_URL = 'http://localhost:3000';
 
 // TODO: make it a prop
 const TOOLBAR_HEIGHT = 44;
+
+// Cast to a stable component type so the JSX below type-checks even when a
+// consumer's dependency tree contains more than one copy of `@types/react`.
+// With duplicate React typings the class component's props resolve to `never`,
+// which breaks the build's type-definition target (`bob build` -> tsc).
+const WebViewComponent = WebView as unknown as React.ComponentClass<WebViewProps>;
+
+// Derived from WebViewProps so it tracks whatever react-native-webview version the
+// consumer installs (the event type itself isn't re-exported from the package root).
+type WebViewLoadEvent = Parameters<NonNullable<WebViewProps['onLoad']>>[0];
 
 export const RichText = ({
   editor,
@@ -117,12 +134,37 @@ export const RichText = ({
     [editor.bridgeExtensions]
   );
 
+  // Create pan responder for swipe to dismiss keyboard
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_evt, gestureState) => {
+        // Only respond if swiping down
+        return (
+          gestureState.dy > 10 &&
+          Math.abs(gestureState.dx) < Math.abs(gestureState.dy)
+        );
+      },
+      onPanResponderRelease: (_evt, gestureState) => {
+        // If swiped down more than 50 pixels, dismiss keyboard
+        if (gestureState.dy > 50) {
+          Keyboard.dismiss();
+          if (editor.webviewRef.current) {
+            editor.webviewRef.current.injectJavaScript(`
+              document.activeElement?.blur();
+              true;
+            `);
+          }
+        }
+      },
+    })
+  ).current;
+
   return (
-    <>
+    <View style={RichTextStyles.fullScreen} {...(Platform.OS === 'ios' ? panResponder.panHandlers : {})}>
       {editor.autofocus && Platform.OS === 'android' && (
         <TextInput autoFocus style={styles.hiddenInput} />
       )}
-      <WebView
+      <WebViewComponent
         scrollEnabled={false}
         key={key}
         style={[
@@ -146,7 +188,7 @@ export const RichText = ({
         keyboardDisplayRequiresUserAction={false}
         {...props}
         // Propagated Props
-        onLoad={(e) => {
+        onLoad={(e: WebViewLoadEvent) => {
           setLoaded(true);
           // This is a workaround for iOS to make sure the webview is loaded
           // See https://github.com/react-native-webview/react-native-webview/issues/3578
@@ -156,7 +198,7 @@ export const RichText = ({
           props.onLoad && props.onLoad(e);
         }}
       />
-    </>
+    </View>
   );
 };
 

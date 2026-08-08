@@ -1,5 +1,5 @@
-import ListItem from '@tiptap/extension-list-item';
-import OrderedList from '@tiptap/extension-ordered-list';
+// @ts-ignore - Import for TypeScript types only, not used at runtime to avoid conflicts
+import { OrderedList, ListItem } from '@tiptap/extension-list';
 import BridgeExtension from './base';
 
 type OrderedListEditorState = {
@@ -30,8 +30,9 @@ export const OrderedListBridge = new BridgeExtension<
   OrderedListEditorInstance,
   OrderedListMessage
 >({
-  tiptapExtension: OrderedList,
-  tiptapExtensionDeps: [ListItem],
+  tiptapExtension: undefined as any,
+  tiptapExtensionDeps: [],
+  forceName: 'orderedList' as any,
   onBridgeMessage: (editor, message) => {
     if (message.type === OrderedListEditorActionType.ToggleOrderedList) {
       editor.chain().focus().toggleOrderedList().run();

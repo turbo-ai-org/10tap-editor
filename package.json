@@ -1,11 +1,12 @@
 {
   "name": "@10play/tentap-editor",
-  "version": "0.7.4",
+  "version": "0.7.3",
   "description": "React Native Rich Text Editor",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index.tsx",
+  "private": true,
   "exports": {
     ".": {
       "import": "./lib/module/index.js",
@@ -25,16 +26,6 @@
     "lib",
     "lib-web",
     "scripts",
-    "android",
-    "ios",
-    "cpp",
-    "*.podspec",
-    "!ios/build",
-    "!android/build",
-    "!android/gradle",
-    "!android/gradlew",
-    "!android/gradlew.bat",
-    "!android/local.properties",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
@@ -44,12 +35,10 @@
     "editor:dev": "vite",
     "editor:build": "vite build && node ./scripts/buildEditor.js ./src/simpleWebEditor/build/index.html",
     "editor:build-web-utils": "rimraf lib-web && vite build --config ./src/webEditorUtils/vite.config.ts && tsc --project ./src/webEditorUtils",
-    "example": "yarn workspace tentap-example",
-    "example76": "yarn workspace example76",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
+    "clean": "del-cli android/build lib",
     "prepare": "bob build",
     "release": "release-it"
   },
@@ -115,11 +104,6 @@
     "react-native": "*",
     "react-native-webview": "*"
   },
-  "workspaces": [
-    "example",
-    "example76",
-    "website"
-  ],
   "packageManager": "yarn@3.6.1",
   "engines": {
     "node": ">= 18.0.0"
@@ -127,8 +111,6 @@
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/example76",
       "<rootDir>/lib/"
     ]
   },
@@ -198,44 +180,40 @@
       ]
     ]
   },
-  "codegenConfig": {
-    "name": "RNTenTapViewSpec",
-    "type": "components",
-    "jsSrcsDir": "src",
-    "ios": {
-      "componentProvider": {
-        "TenTapView": "TenTapView"
-      }
-    }
-  },
   "dependencies": {
-    "@tiptap/extension-blockquote": "^2.2.1",
-    "@tiptap/extension-bold": "^2.2.1",
-    "@tiptap/extension-bullet-list": "^2.2.1",
-    "@tiptap/extension-code": "^2.2.1",
-    "@tiptap/extension-code-block": "^2.2.1",
-    "@tiptap/extension-color": "^2.1.16",
-    "@tiptap/extension-document": "^2.2.1",
-    "@tiptap/extension-dropcursor": "^2.2.4",
-    "@tiptap/extension-hard-break": "^2.3.1",
-    "@tiptap/extension-heading": "^2.2.1",
-    "@tiptap/extension-highlight": "^2.1.16",
-    "@tiptap/extension-history": "^2.2.1",
-    "@tiptap/extension-horizontal-rule": "^2.2.1",
-    "@tiptap/extension-image": "^2.2.1",
-    "@tiptap/extension-italic": "^2.2.1",
-    "@tiptap/extension-link": "2.10.3",
-    "@tiptap/extension-list-item": "^2.2.1",
-    "@tiptap/extension-ordered-list": "^2.2.1",
-    "@tiptap/extension-placeholder": "^2.2.1",
-    "@tiptap/extension-strike": "^2.2.1",
-    "@tiptap/extension-task-item": "^2.1.16",
-    "@tiptap/extension-task-list": "^2.1.16",
-    "@tiptap/extension-text-style": "^2.1.16",
-    "@tiptap/extension-underline": "^2.1.16",
-    "@tiptap/pm": "^2.1.16",
-    "@tiptap/react": "^2.1.16",
-    "@tiptap/starter-kit": "^2.1.16",
+    "@expo/vector-icons": "^15.0.2",
+    "@sbaiahmed1/react-native-blur": "^3.2.0",
+    "@tiptap/core": "^3.0.0",
+    "@tiptap/extension-blockquote": "^3.0.0",
+    "@tiptap/extension-bold": "^3.0.0",
+    "@tiptap/extension-bullet-list": "^3.0.0",
+    "@tiptap/extension-code": "^3.0.0",
+    "@tiptap/extension-code-block": "^3.0.0",
+    "@tiptap/extension-color": "^3.0.0",
+    "@tiptap/extension-document": "^3.0.0",
+    "@tiptap/extension-dropcursor": "^3.0.0",
+    "@tiptap/extension-hard-break": "^3.0.0",
+    "@tiptap/extension-heading": "^3.0.0",
+    "@tiptap/extension-highlight": "^3.0.0",
+    "@tiptap/extension-history": "^3.0.0",
+    "@tiptap/extension-horizontal-rule": "^3.0.0",
+    "@tiptap/extension-image": "^3.0.0",
+    "@tiptap/extension-italic": "^3.0.0",
+    "@tiptap/extension-link": "^3.0.0",
+    "@tiptap/extension-list": "^3.0.9",
+    "@tiptap/extension-list-item": "^3.0.0",
+    "@tiptap/extension-ordered-list": "^3.0.0",
+    "@tiptap/extension-placeholder": "^3.0.0",
+    "@tiptap/extension-strike": "^3.0.0",
+    "@tiptap/extension-task-item": "^3.0.0",
+    "@tiptap/extension-task-list": "^3.0.0",
+    "@tiptap/extension-text": "^3.0.0",
+    "@tiptap/extension-text-style": "^3.0.0",
+    "@tiptap/extension-underline": "^3.0.0",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/react": "^3.0.0",
+    "@tiptap/starter-kit": "^3.0.0",
+    "expo-blur": "^15.0.7",
     "lodash": "^4.17.21",
     "react-dom": "^18.2.0"
   }

@@ -23,4 +23,6 @@ export const Images = {
   Aa: require('./Aa.png'),
   a: require('./a.png'),
   close: require('./close.png'),
+  keyboard: require('./keyboard.png'),
+  keyboardDismiss: require('./keyboard-dismiss.png'),
 };

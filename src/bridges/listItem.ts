@@ -1,4 +1,5 @@
-import ListItem from '@tiptap/extension-list-item';
+// @ts-ignore - Import for TypeScript types only, not used at runtime to avoid conflicts
+import { ListItem } from '@tiptap/extension-list';
 import BridgeExtension from './base';
 
 type ListItemEditorState = {
@@ -36,7 +37,8 @@ export const ListItemBridge = new BridgeExtension<
   ListItemEditorInstance,
   ListItemMessage
 >({
-  tiptapExtension: ListItem,
+  tiptapExtension: undefined as any,
+  forceName: 'listItem' as any,
   onBridgeMessage: (editor, message) => {
     switch (message.type) {
       case ListItemEditorActionType.Lift:

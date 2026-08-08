@@ -1,0 +1,1 @@
+{"version":3,"file":"CustomKeyboardExtension.d.ts","sourceRoot":"","sources":["../../../../../src/RichText/Keyboard/CustomKeyboardExtension.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,OAAO,CAAC;AAG3C,qBAAa,uBAAuB;IACf,EAAE,EAAE,MAAM;IAAS,IAAI,EAAE,aAAa,CAAC,GAAG,CAAC;gBAA3C,EAAE,EAAE,MAAM,EAAS,IAAI,EAAE,aAAa,CAAC,GAAG,CAAC;CAK/D"}
